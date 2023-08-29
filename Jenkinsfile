@@ -1,1 +1,9 @@
-echo "test"
+pipeline {
+    stages {
+        stage('Github Repo Clone') {
+            steps {
+                sh 'git clone https://github.com/facebookexperimental/hermit'
+            }
+        }
+    }
+}
