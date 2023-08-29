@@ -22,13 +22,13 @@ pipeline {
             }
             steps { 
                 script {
-                    dir('hermit/') {
+                   // dir('hermit/') {
                     sh 'cd ${filePath} && zip -r ${zipDosyaAdi} examples/ && cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi} '
                     // sh "zip -r ${zipDosyaAdi} examples/"
                     // sh "cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi}"
                     echo "Oluşturulan zip dosyasının adı: ${zipDosyaAdi}"
                     sh 'ls -al'   
-                    }
+                    //}
                 }
             }
         }
