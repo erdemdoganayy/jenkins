@@ -23,6 +23,7 @@ pipeline {
             steps { 
                 script {
                    // dir('hermit/') {
+                    def filePath = '/var/lib/jenkins/workspace/task-jenkins/hermit'
                     sh 'cd ${filePath} && zip -r ${zipDosyaAdi} examples/ && cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi} '
                     // sh "zip -r ${zipDosyaAdi} examples/"
                     // sh "cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi}"
