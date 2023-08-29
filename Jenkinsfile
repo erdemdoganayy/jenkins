@@ -3,7 +3,7 @@ def baslangicZamaniMilisaniye = currentBuild.startTimeInMillis
 def baslangicZamani = new Date(baslangicZamaniMilisaniye)
 def saat = baslangicZamani.format("HH:mm:ss")
 def zipDosyaAdi = "examples_${buildNumarasi}.zip"
-def filePath = '/var/lib/jenkins/workspace/task-jenkins/hermit'
+//def filePath = '/var/lib/jenkins/workspace/task-jenkins/hermit'
 pipeline {
     agent any
     stages {
