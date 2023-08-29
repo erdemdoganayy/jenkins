@@ -3,7 +3,7 @@ def baslangicZamaniMilisaniye = currentBuild.startTimeInMillis
 def baslangicZamani = new Date(baslangicZamaniMilisaniye)
 def saat = baslangicZamani.format("HH:mm:ss")
 def zipDosyaAdi = "examples_${buildNumarasi}.zip"
-//def filePath = '/var/lib/jenkins/workspace/task-jenkins/hermit'
+def filePath = '/var/lib/jenkins/workspace/task-jenkins'
 pipeline {
     agent any
     stages {
@@ -22,14 +22,12 @@ pipeline {
             }
             steps { 
                 script {
-                   // dir('hermit/') {
-                    def filePath = '/var/lib/jenkins/workspace/task-jenkins/hermit'
-                    sh 'cd ${filePath} && zip -r ${zipDosyaAdi} examples/ && cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi} '
-                    // sh "zip -r ${zipDosyaAdi} examples/"
-                    // sh "cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi}"
+                    dir("$(filePath)/hermit/") {
+                    sh "zip -r ${zipDosyaAdi} examples/"
+                    sh "cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi}"
                     echo "Oluşturulan zip dosyasının adı: ${zipDosyaAdi}"
                     sh 'ls -al'   
-                    //}
+                    }
                 }
             }
         }
