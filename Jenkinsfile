@@ -1,3 +1,9 @@
+def buildNumarasi = currentBuild.number
+def baslangicZamaniMilisaniye = currentBuild.startTimeInMillis
+def baslangicZamani = new Date(baslangicZamaniMilisaniye)
+def saat = baslangicZamani.format("HH:mm:ss")
+def zipDosyaAdi = "examples_${buildNumarasi}.zip"
+def filePath = '/var/lib/jenkins/workspace/task-jenkins/hermit'
 pipeline {
     agent any
     stages {
@@ -16,15 +22,10 @@ pipeline {
             }
             steps { 
                 script {
-                    def buildNumarasi = currentBuild.number
-                    def baslangicZamaniMilisaniye = currentBuild.startTimeInMillis
-                    def baslangicZamani = new Date(baslangicZamaniMilisaniye)
-                    def saat = baslangicZamani.format("HH:mm:ss")
-                    def zipDosyaAdi = "examples_${buildNumarasi}.zip"
-
                     dir('hermit/') {
-                     
-                    sh "zip -r ${zipDosyaAdi} examples/"
+                    sh 'cd ${filePath} && zip -r ${zipDosyaAdi} examples/ && cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi} '
+                    // sh "zip -r ${zipDosyaAdi} examples/"
+                    // sh "cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi}"
                     echo "Oluşturulan zip dosyasının adı: ${zipDosyaAdi}"
                     sh 'ls -al'   
                     }
@@ -32,11 +33,10 @@ pipeline {
             }
         }
        
-         stage('Örnek Aşama') {
+         stage('Upload Aws S3') {
             steps { 
 
              script {
-                    def sourceFilePath = '/var/lib/jenkins/workspace/task-jenkins/hermit/examples_80.zip'
                     def s3Bucket = 'myjnknsbckt'
                     def awsCliPath = '/usr/local/bin/aws' // AWS CLI yolunu buraya ekleyin
                     withCredentials([[
@@ -47,7 +47,7 @@ pipeline {
                     ]]) {
                     
                     sh """
-                    ${awsCliPath} s3 cp ${sourceFilePath} s3://${s3Bucket}/
+                    ${awsCliPath} s3 cp /var/lib/jenkins/workspace/task-jenkins/buckets/examples_${buildNumarasi}.zip s3://${s3Bucket}/
                     """
                     }
             }
