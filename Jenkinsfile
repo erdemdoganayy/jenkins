@@ -22,7 +22,7 @@ pipeline {
             }
             steps { 
                 script {
-                    dir("$(filePath)/hermit/") {
+                    dir("${filePath}/hermit/") {
                     sh "zip -r ${zipDosyaAdi} examples/"
                     sh "cp -R ${zipDosyaAdi} ../buckets/${zipDosyaAdi}"
                     echo "Oluşturulan zip dosyasının adı: ${zipDosyaAdi}"
