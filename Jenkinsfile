@@ -11,7 +11,7 @@ pipeline {
                 // environment {
                 //     cloneFolderName = 'hermit'
                 // }
-                // steps {
+                 steps {
                 //     sh 'rm -rf $cloneFolderName'
                 //     sh 'git clone https://github.com/facebookexperimental/hermit'
                 // }
@@ -21,6 +21,7 @@ pipeline {
                     credentialsId: jenkins-user]],
                     branches: [[name: "main"]]
                     ]
+            }
             }
             stage('Github Repo ZIP') {
                 steps {
