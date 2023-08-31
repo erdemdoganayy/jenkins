@@ -19,7 +19,7 @@ pipeline {
                     checkout scm: [ $class: "GitSCM",
                     userRemoteConfigs: [[url: "https://github.com/facebookexperimental/hermit",
                     credentialsId: jenkins-user]],
-                    branches: [[name: "master"]]
+                    branches: [[name: "main"]]
                     ]
             }
             stage('Github Repo ZIP') {
