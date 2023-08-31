@@ -8,13 +8,19 @@ pipeline {
     agent any
         stages {
             stage('Github Repo Clone') {
-                environment {
-                    cloneFolderName = 'hermit'
-                }
-                steps {
-                    sh 'rm -rf $cloneFolderName'
-                    sh 'git clone https://github.com/facebookexperimental/hermit'
-                }
+                // environment {
+                //     cloneFolderName = 'hermit'
+                // }
+                // steps {
+                //     sh 'rm -rf $cloneFolderName'
+                //     sh 'git clone https://github.com/facebookexperimental/hermit'
+                // }
+                 cleanWs()
+                    checkout scm: [ $class: "GitSCM",
+                    userRemoteConfigs: [[url: "https://github.com/facebookexperimental/hermit",
+                    credentialsId: jenkins-user]],
+                    branches: [[name: "master"]]
+                    ]
             }
             stage('Github Repo ZIP') {
                 steps {
