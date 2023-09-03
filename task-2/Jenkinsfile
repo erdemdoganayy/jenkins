@@ -21,13 +21,15 @@ pipeline {
                 //     string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
                 //     ]) {
                         
-
+                    
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
+                docker.withRegistry('jrdeveloper06/nginx-demo', 'my-docker-id'){
                        
                         sh "docker login -u ${credentials.Username} -p ${credentials.Password}"
                     //    sh "docker push ${DockerHub-Username}:nginx_hello:${buildNumber}"
                     // }
+                }
                 }
             }
         
