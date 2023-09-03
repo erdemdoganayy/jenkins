@@ -29,6 +29,7 @@ pipeline {
                         // Docker Push
                         sh "docker tag nginx_hello jrdeveloper06/nginx_hello:${buildNumber}"
                         sh "docker push jrdeveloper06/nginx_hello:${buildNumber}"
+                        sh "docker image rm jrdeveloper06/nginx_hello:${buildNumber}"
          
                     }
                 }
