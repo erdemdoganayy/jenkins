@@ -10,9 +10,9 @@ pipeline {
                  sh "docker pull jrdeveloper06/nginx_hello:${params.BUILD_NUMBER}"
                 }
             }
-             stage('Docker Build & Push') {
+             stage('Dive Analyze') {
                 steps  {
-                    sh "echo selammm"
+                    sh "dive jrdeveloper06/nginx_hello:${params.BUILD_NUMBER}"
                 }
                 
             }
