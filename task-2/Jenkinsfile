@@ -9,12 +9,15 @@ pipeline {
     agent any
         stages {
             stage('Checkout & Github Repo Clone') {
-                checkout changelog: false,
+                steps  {
+                     checkout changelog: false,
                          scm: scmGit(userRemoteConfigs: [
                          [ credentialsId: 'my-github-id',
                            url: 'https://github.com/erdemdoganayy/nginx-demos' ]
                          ])
                 }
+            }
+               
             
             // stage('Github Repo ZIP') {
             //     steps {
