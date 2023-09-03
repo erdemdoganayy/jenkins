@@ -22,7 +22,7 @@ pipeline {
                     string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
                     ]) {
                         
-                    
+                     
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
 
