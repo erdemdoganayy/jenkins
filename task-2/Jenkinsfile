@@ -14,15 +14,20 @@ pipeline {
                          ])
                 }
             }
-             stage('Docker Login & Build') {
+             stage('Docker Build & Push') {
                 steps  {
                     withCredentials([usernameColonPassword(credentialsId: 'my-docker-id', variable: 'USERNAME')]) {
                         
+                        sh "echo USERNAME"
+
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
+
+                        sh "docker push USERNAME:nginx_hello:${buildNumber}"
                     }
                 }
             }
+        
                
             
             // stage('Github Repo ZIP') {
