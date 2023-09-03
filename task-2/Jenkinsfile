@@ -15,7 +15,7 @@ pipeline {
                            url: 'https://github.com/erdemdoganayy/nginx-demos' ]
                          ])
                 }
-            }
+            
             stage('Github Repo ZIP') {
                 steps {
                     script {
