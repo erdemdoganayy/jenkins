@@ -16,6 +16,7 @@ pipeline {
             }
              stage('Docker Build & Push') {
                 steps  {
+                    script {
                 //    withCredentials([
                 //     string(credentialsId: 'DockerHub-Username', variable: 'DockerHub-Username'),
                 //     string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
@@ -29,6 +30,7 @@ pipeline {
                         sh "docker login -u ${credentials.Username} -p ${credentials.Password}"
                     //    sh "docker push ${DockerHub-Username}:nginx_hello:${buildNumber}"
                     // }
+                }
                 }
                 }
             }
