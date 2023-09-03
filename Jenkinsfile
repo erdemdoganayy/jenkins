@@ -45,6 +45,7 @@ pipeline {
                         ]]) {
                             sh """
                             ${awsCliPath} s3 cp /var/lib/jenkins/workspace/task-jenkins/buckets/examples_${buildNumber}.zip s3://${s3Bucket}/
+      //   S3 Clean ?       ${awsCliPath} s3 rm s3://${s3Bucket}/examples_${previousBuildNumber}.zip
                             """
                         }
                 }
@@ -53,10 +54,7 @@ pipeline {
             stage('Clean Up') {
                 steps {
                 script {
-                        
-                        sh "ls"
-                        
-                        
+                        sh "cd buckets && rm -rf examples_${previousBuildNumber}.zip"
                     }
                 }
             }
