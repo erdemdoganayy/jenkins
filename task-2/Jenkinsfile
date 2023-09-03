@@ -1,0 +1,54 @@
+def buildNumber = currentBuild.number
+def previousBuildNumber = currentBuild.number - 1
+def startTimeMiliSecond = currentBuild.startTimeInMillis
+def startTime = new Date(startTimeMiliSecond)
+// def saat = startTime.format("HH:mm:ss")
+def zipFileName = "examples_${buildNumber}.zip"
+def filePath = '/var/lib/jenkins/workspace/task-jenkins/hermit'
+pipeline {
+    agent any
+        stages {
+            stage('Checkout & Github Repo Clone') {
+                checkout changelog: false,
+                         scm: scmGit(userRemoteConfigs: [
+                         [ credentialsId: 'my-github-id',
+                           url: 'https://github.com/erdemdoganayy/nginx-demos' ]
+                         ])
+                }
+            }
+            stage('Github Repo ZIP') {
+                steps {
+                    script {
+                       sh "ls"
+                    }
+                }
+            }
+
+            stage('Upload Aws S3') {
+                steps {
+                script {
+                        def s3Bucket = 'myjnknsbckt'
+                        def awsCliPath = '/usr/local/bin/aws'
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+                            credentialsId: 'jenkins-user'
+                        ]]) {
+                            sh """
+                            ${awsCliPath} s3 cp /var/lib/jenkins/workspace/task-jenkins/buckets/examples_${buildNumber}.zip s3://${s3Bucket}/
+      //   S3 Clean ?       ${awsCliPath} s3 rm s3://${s3Bucket}/examples_${previousBuildNumber}.zip
+                            """
+                        }
+                }
+                }
+            }
+            stage('Clean Up') {
+                steps {
+                script {
+                        sh "cd buckets && rm -rf examples_${previousBuildNumber}.zip"
+                    }
+                }
+            }
+        }
+}
