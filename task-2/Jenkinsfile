@@ -26,7 +26,7 @@ pipeline {
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
 
-                       sh "echo ${DockerHub-Username}"
+                   
                     //    sh "docker login -u ${DockerHub-Username} -p ${DockerHub-Password}"
                     //    sh "docker push jrdeveloper06/nginx-demo:nginx_hello:${buildNumber}"
          
