@@ -1,7 +1,7 @@
 def buildNumber = currentBuild.number
 def previousBuildNumber = currentBuild.number - 1
 
-def filePath = 'nginx-demos/nginx-hello'
+def filePath = 'nginx-demo/nginx-hello'
 pipeline {
     agent any
         stages {
