@@ -17,24 +17,23 @@ pipeline {
              stage('Docker Build & Push') {
                 steps  {
                     script {
-                //    withCredentials([
-                //     string(credentialsId: 'DockerHub-Username', variable: 'DockerHub-Username'),
-                //     string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
-                //     ]) {
+                   withCredentials([
+                    string(credentialsId: 'DockerHub-Username', variable: 'DockerHub-Username'),
+                    string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
+                    ]) {
                         
                     
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
-                       // docker.withRegistry('https://registry.hub.docker.com', 'my-docker-id'){
+
                        
-                       // sh "docker login -u ${credentials.Username} -p ${credentials.Password}"
-                       // sh "docker push jrdeveloper06/nginx-demo:nginx_hello:${buildNumber}"
-                        docker.withRegistry('https://registry.hub.docker.com', 'my-docker-id') {
-                        docker.image("nginx_hello:${buildNumber}").push()
-                    // }
+                       sh "docker login -u ${DockerHub-Username} -p ${DockerHub-Password}"
+                       sh "docker push jrdeveloper06/nginx-demo:nginx_hello:${buildNumber}"
+         
+                    }
                 }
                 }
-                }
+                
             }
         
                
