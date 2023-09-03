@@ -16,13 +16,14 @@ pipeline {
             }
              stage('Docker Build & Push') {
                 steps  {
-                   withCredentials([usernameColonPassword(credentialsId: 'my-docker-id', variable: 'USERNAME')]) {
+                   withCredentials([usernameColonPassword(credentialsId: 'my-docker-id', variable: 'USERNAME', veriable: 'PASSWORD')]) {
                         
-                        sh "echo USERNAME"
+                        sh "echo -u ${USERNAME} -p ${PASSWORD}"
 
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
 
+                        sh "docker login "
                         sh "docker push ${USERNAME}:nginx_hello:${buildNumber}"
                     }
                 }
