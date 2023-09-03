@@ -16,7 +16,9 @@ pipeline {
             }
              stage('Docker Login & Build') {
                 steps  {
-                    sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
+                    withCredentials([usernameColonPassword(credentialsId: 'my-docker-id', variable: '')]) {
+                        sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
+                    }
                 }
             }
                
