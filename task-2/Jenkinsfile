@@ -1,6 +1,6 @@
 def buildNumber = currentBuild.number
 def previousBuildNumber = currentBuild.number - 1
-
+ def credentials = credentials('my-docker-id');
 def filePath = '/var/lib/jenkins/workspace/nginx-demo/nginx-hello'
 pipeline {
     agent any
@@ -16,18 +16,18 @@ pipeline {
             }
              stage('Docker Build & Push') {
                 steps  {
-                   withCredentials([
-                    string(credentialsId: 'DockerHub-Username', variable: 'DockerHub-Username'),
-                    string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
-                    ]) {
+                //    withCredentials([
+                //     string(credentialsId: 'DockerHub-Username', variable: 'DockerHub-Username'),
+                //     string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
+                //     ]) {
                         
 
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
-                        def credentials = credentials('my-docker-id');
-                        sh "docker login -u ${credentials.username} -p ${credentials.password}"
+                       
+                        sh "docker login -u ${credentials.username} -p ${credentials}"
                     //    sh "docker push ${DockerHub-Username}:nginx_hello:${buildNumber}"
-                    }
+                    // }
                 }
             }
         
