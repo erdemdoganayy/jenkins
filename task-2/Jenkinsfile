@@ -26,7 +26,7 @@ pipeline {
                     ]) {
                         
                         // Docker Build
-                        sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
+                        sh "docker build -t nginx_hello:${buildNumber} ${filePath} ."
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
 
                         // Docker Push
