@@ -1,10 +1,13 @@
 def filePath = '/var/lib/jenkins/workspace/nginx-demo/nginx-hello'
+def pipelineVariables = [
+    buildNumber: "buildNumber"
+]
 pipeline {
     agent any
         stages {
             stage('Checkout & Github Repo Clone') {
                 steps  {
-                  sh "echo ${buildNumber}"
+                  sh "echo ${pipelineVariables.buildNumber}"
                 }
             }
              stage('Docker Build & Push') {
