@@ -28,8 +28,8 @@ pipeline {
 
                    
                        sh "docker login -u jrdeveloper06 -p !Erdem.1234!"
-                       sh "docker tag nginx_hello jrdeveloper06/nginx_hello:${buildNumber}"
-                       sh "docker push nginx_hello:${buildNumber}"
+                       sh "docker tag nginx_hello:${buildNumber} jrdeveloper06/nginx_hello"
+                       sh "docker push jrdeveloper06/nginx_hello"
          
                     }
                 }
