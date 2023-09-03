@@ -5,6 +5,10 @@ def filePath = '/var/lib/jenkins/workspace/nginx-demo/nginx-hello'
 def deployPipeline = 'nginx-demo-deploy'
 pipeline {
     agent any
+    parameters {
+        string(name: 'BUILD_NUMBER', defaultValue: 'buildNumber', description: 'Build number to pass to the next pipeline')
+    }
+
         stages {
             stage('Checkout & Github Repo Clone') {
                 steps  {
@@ -39,7 +43,7 @@ pipeline {
             }
              stage("Deploy") {
                 steps {
-                           build job: "${deployPipeline}",parameters: [string(name: "buildNumber", value: "${buildNumber}")]
+                           build job: "${deployPipeline}", parameters: [string(name: 'BUILD_NUMBER', value: "${params.BUILD_NUMBER}")]
                    }
                 }
         
