@@ -1,15 +1,13 @@
 def filePath = '/var/lib/jenkins/workspace/nginx-demo/nginx-hello'
-def pipelineVariables = [
-    buildNumber: "buildNumber"
-]
+
 
 pipeline {
     agent any
     
         stages {
-            stage('Checkout & Github Repo Clone') {
+            stage('Docker Pull') {
                 steps  {
-                 sh" echo Received BUILD_NUMBER: ${params.BUILD_NUMBER}"
+                 sh "docker pull jrdeveloper06/nginx_hello:${params.BUILD_NUMBER}"
                 }
             }
              stage('Docker Build & Push') {
