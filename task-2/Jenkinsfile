@@ -22,14 +22,14 @@ pipeline {
                     string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
                     ]) {
                         
-                     
+                        // Docker Build
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
 
-                   
-                      // sh "docker login -u jrdeveloper06 -p !Erdem.1234!"
-                       sh "docker tag nginx_hello jrdeveloper06/nginx_hello:${buildNumber}"
-                       sh "docker push jrdeveloper06/nginx_hello:${buildNumber}"
+                        // Docker Push
+                        sh "docker tag nginx_hello ${DockerHub-Username}/nginx_hello:${buildNumber}"
+                        sh "docker push jrdeveloper06/nginx_hello:${buildNumber}"
+                        sh "docker image rm jrdeveloper06/nginx_hello:${buildNumber}"
          
                     }
                 }
