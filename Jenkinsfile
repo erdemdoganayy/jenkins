@@ -1,32 +1,30 @@
 def buildNumber = currentBuild.number
+def previousBuildNumber = currentBuild.number - 1
 def startTimeMiliSecond = currentBuild.startTimeInMillis
 def startTime = new Date(startTimeMiliSecond)
 // def saat = startTime.format("HH:mm:ss")
 def zipFileName = "examples_${buildNumber}.zip"
-def filePath = '/var/lib/jenkins/workspace/task-jenkins'
+def filePath = '/var/lib/jenkins/workspace/task-jenkins/hermit'
 pipeline {
     agent any
         stages {
             stage('Github Repo Clone') {
-                // environment {
-                //     cloneFolderName = 'hermit'
-                // }
-                 steps {
-                //     sh 'rm -rf $cloneFolderName'
-                //     sh 'git clone https://github.com/facebookexperimental/hermit'
-                // }
-                 cleanWs()
-                    checkout scm: [ $class: "GitSCM",
-                    userRemoteConfigs: [[url: "https://github.com/facebookexperimental/hermit",
-                    credentialsId: jenkins-user]],
-                    branches: [[name: "main"]]
-                    ]
-            }
+                environment {
+                    cloneFolderName = 'hermit'
+                }
+                steps {
+                    sh 'rm -rf $cloneFolderName'
+                    sh 'git clone https://github.com/facebookexperimental/hermit'
+                    // checkout scmGit(
+                    // branches: [[name: '*/main']], 
+                    // extensions: [],
+                    // userRemoteConfigs: [[url: 'https://github.com/facebookexperimental/hermit']])
+                }
             }
             stage('Github Repo ZIP') {
                 steps {
                     script {
-                        dir("${filePath}/hermit/") {
+                        dir("${filePath}") {
                         sh "zip -r ${zipFileName} examples/"
                         sh "cp -R ${zipFileName} ../buckets/${zipFileName}"
                         }
@@ -50,6 +48,16 @@ pipeline {
                             """
                         }
                 }
+                }
+            }
+            stage('Clean Up') {
+                steps {
+                script {
+                        
+                        sh "ls"
+                        
+                        
+                    }
                 }
             }
         }
