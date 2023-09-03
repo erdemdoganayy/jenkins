@@ -27,7 +27,7 @@ pipeline {
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
 
                    
-                       sh "docker login -u jrdeveloper06 -p !Erdem.1234!"
+                      // sh "docker login -u jrdeveloper06 -p !Erdem.1234!"
                        sh "docker tag nginx_hello jrdeveloper06/nginx_hello:${buildNumber}"
                        sh "docker push jrdeveloper06/nginx_hello:${buildNumber}"
          
