@@ -25,7 +25,7 @@ pipeline {
                     
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
-                        docker.withRegistry('https://hub.docker.com/', 'my-docker-id'){
+                        docker.withRegistry('https://registry.hub.docker.com', 'my-docker-id'){
                        
                        // sh "docker login -u ${credentials.Username} -p ${credentials.Password}"
                         sh "docker push jrdeveloper06/nginx-demo:nginx_hello:${buildNumber}"
