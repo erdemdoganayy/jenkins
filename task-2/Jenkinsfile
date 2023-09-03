@@ -18,7 +18,7 @@ pipeline {
                 steps  {
                     withCredentials([usernameColonPassword(credentialsId: 'my-docker-id', variable: 'USERNAME')]) {
                         
-                        sh "cd /var/lib/jenkins/workspace/nginx-demo/nginx-hello && docker build -t nginx_hello:${buildNumber}"
+                        sh "cd /var/lib/jenkins/workspace/nginx-demo/nginx-hello && docker build -t nginx_hello:${buildNumber} ."
                     }
                 }
             }
