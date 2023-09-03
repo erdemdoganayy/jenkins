@@ -21,13 +21,12 @@ pipeline {
                     string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
                     ]) {
                         
-                        sh "echo -u ${DockerHub-Username} -p ${DockerHub-Password}"
 
                         sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
                         sh "docker image rm nginx_hello:${previousBuildNumber}"
-
-                        sh "docker login "
-                        sh "docker push ${DockerHub-Username}:nginx_hello:${buildNumber}"
+                        def credentials = credentials('my-docker-id');
+                        sh "docker login -u ${credentials.username} -p ${credentials.password}"
+                    //    sh "docker push ${DockerHub-Username}:nginx_hello:${buildNumber}"
                     }
                 }
             }
