@@ -39,7 +39,7 @@ pipeline {
             }
              stage("Deploy") {
                 steps {
-                           build job: "${deployPipeline}",parameters: [string(name: 'buildNumber', value: "${buildNumber}")]
+                           build job: "${deployPipeline}",parameters: [string(name: "buildNumber", value: "${buildNumber}")]
                    }
                 }
         
