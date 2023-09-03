@@ -8,7 +8,7 @@ pipeline {
         stages {
             stage('Checkout & Github Repo Clone') {
                 steps  {
-                  sh "echo selammm"
+                  sh "echo ${buildNumber}"
                 }
             }
              stage('Docker Build & Push') {
