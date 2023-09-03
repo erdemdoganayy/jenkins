@@ -16,7 +16,7 @@ pipeline {
             }
              stage('Docker Build & Push') {
                 steps  {
-                   withCredentials([usernameColonPassword(credentialsId: 'my-docker-id', variable: 'USERNAME', veriable: 'PASSWORD')]) {
+                   withCredentials([usernamePassword(credentialsId: 'my-docker-id', variable: 'USERNAME', veriable: 'PASSWORD')]) {
                         
                         sh "echo -u ${USERNAME} -p ${PASSWORD}"
 
