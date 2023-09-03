@@ -1,7 +1,8 @@
 def buildNumber = currentBuild.number
 def previousBuildNumber = currentBuild.number - 1
- def credentials = credentials('my-docker-id');
+def credentials = credentials('my-docker-id');
 def filePath = '/var/lib/jenkins/workspace/nginx-demo/nginx-hello'
+def deployPipeline = 'nginx-demo-deploy'
 pipeline {
     agent any
         stages {
@@ -36,42 +37,9 @@ pipeline {
                 }
                 
             }
+             stage("Deploy") {
+                           build job: ${deployPipeline},parameters: [string(name: 'buildNumber', value: ${buildNumber})]
+                }
         
-               
-            
-            // stage('Github Repo ZIP') {
-            //     steps {
-            //         script {
-            //            sh "ls"
-            //         }
-            //     }
-            // }
-
-    //         stage('Upload Aws S3') {
-    //             steps {
-    //             script {
-    //                     def s3Bucket = 'myjnknsbckt'
-    //                     def awsCliPath = '/usr/local/bin/aws'
-    //                     withCredentials([[
-    //                         $class: 'AmazonWebServicesCredentialsBinding',
-    //                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-    //                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-    //                         credentialsId: 'jenkins-user'
-    //                     ]]) {
-    //                         sh """
-    //                         ${awsCliPath} s3 cp /var/lib/jenkins/workspace/task-jenkins/buckets/examples_${buildNumber}.zip s3://${s3Bucket}/
-    //   //   S3 Clean ?       ${awsCliPath} s3 rm s3://${s3Bucket}/examples_${previousBuildNumber}.zip
-    //                         """
-    //                     }
-    //             }
-    //             }
-    //         }
-            // stage('Clean Up') {
-            //     steps {
-            //     script {
-            //             sh "cd buckets && rm -rf examples_${previousBuildNumber}.zip"
-            //         }
-            //     }
-            // }
         }
 }
