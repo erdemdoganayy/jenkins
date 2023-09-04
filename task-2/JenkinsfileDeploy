@@ -1,6 +1,5 @@
 def filePath = '/var/lib/jenkins/workspace/nginx-demo/nginx-hello'
 
-
 pipeline {
     agent any
     
@@ -12,7 +11,7 @@ pipeline {
             }
              stage('Dive Analyze') {
                 steps  {
-                    sh "dive jrdeveloper06/nginx_hello:${params.BUILD_NUMBER}"
+                    sh "dive jrdeveloper06/nginx_hello:${params.BUILD_NUMBER} --lowestEfficiency=0.99"
                 }
                 
             }
