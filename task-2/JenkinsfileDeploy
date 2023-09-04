@@ -1,5 +1,3 @@
-def filePath = '/var/lib/jenkins/workspace/nginx-demo/nginx-hello'
-
 pipeline {
     agent any
     
