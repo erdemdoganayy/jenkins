@@ -33,6 +33,9 @@ pipeline {
             }
 
             stage('Upload Aws S3') {
+                environment {
+                AWS_DEFAULT_REGION = 'us-east-1'
+                }
                 steps {
                 script {
                         def s3Bucket = 'myjnknsbckt'
@@ -44,8 +47,8 @@ pipeline {
                             credentialsId: 'jenkins-user'
                         ]]) {
                             sh """
-                            ${awsCliPath} s3 cp /var/lib/jenkins/workspace/task-jenkins/buckets/examples_${buildNumber}.zip s3://${s3Bucket}/
-      //   S3 Clean ?       ${awsCliPath} s3 rm s3://${s3Bucket}/examples_${previousBuildNumber}.zip
+                            ${awsCliPath} s3 cp /var/lib/jenkins/workspace/task-jenkins/buckets/examples_${buildNumber}.zip s3://${s3Bucket}/ ${env.AWS_DEFAULT_REGION}
+                            ${awsCliPath} s3 rm s3://${s3Bucket}/examples_${previousBuildNumber}.zip
                             """
                         }
                 }
