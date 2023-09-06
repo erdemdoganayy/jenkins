@@ -9,7 +9,7 @@ pipeline {
             }
              stage('Dive Analyze') {
                 steps  {
-                    sh "dive jrdeveloper06/nginx_hello:${params.BUILD_NUMBER} " // --lowestEfficiency=0.99
+                    sh "dive --ci --lowestEfficiency=0.99 jrdeveloper06/nginx_hello:${params.BUILD_NUMBER} " // --lowestEfficiency=0.99
                 }
                 
             }
