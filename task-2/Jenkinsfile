@@ -2,7 +2,7 @@ def filePath = '/var/lib/jenkins/workspace/nginx-demo/nginx-hello'
 def triggerPipeline = 'nginx-demo-dive-analyze'
 pipeline {
     agent any
-    enviroment {
+    environment {
         DOCKER_REPO = "jrdeveloper06/nginx_hello"
     }
         stages {
