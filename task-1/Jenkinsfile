@@ -1,9 +1,10 @@
+def buildNumber = currentBuild.number
 pipeline {
     agent any
     environment {
-        BUILD_NUMBER = currentBuild.number
+        BUILD_NUMBER = buildNumber
         FILE_PATH = '/var/lib/jenkins/workspace/task-jenkins/hermit'
-        ZIP_FILE_NAME = "examples_${buildNumber}.zip"
+        ZIP_FILE_NAME = "examples_${BUILD_NUMBER}.zip"
         SOURCE_DIR = 'examples'
         S3_BUCKET = 'myjnknsbckt'
         AWS_CLI_PATH = '/usr/local/bin/aws'
