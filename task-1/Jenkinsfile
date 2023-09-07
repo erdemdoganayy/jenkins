@@ -1,8 +1,6 @@
-def buildNumber = currentBuild.number
 pipeline {
     agent any
     environment {
-        BUILD_NUMBER_TEST = buildNumber
         FILE_PATH = '/var/lib/jenkins/workspace/task-jenkins/hermit'
         ZIP_FILE_NAME = "examples_${BUILD_NUMBER}.zip"
         SOURCE_DIR = 'examples'
@@ -37,7 +35,7 @@ pipeline {
             stage('Upload Aws S3') {
                 steps {
                 script {
-                            sh " ${env.AWS_CLI_PATH} s3 cp /var/lib/jenkins/workspace/task-jenkins/buckets/examples_${env.BUILD_NUMBER}.zip s3://${env.S3_BUCKET}/ "
+                            sh " ${env.AWS_CLI_PATH} s3 cp /var/lib/jenkins/workspace/task-jenkins/buckets/examples_${BUILD_NUMBER}.zip s3://${env.S3_BUCKET}/ "
                         }
                 }
             }
