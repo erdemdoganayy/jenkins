@@ -1,15 +1,17 @@
 pipeline {
     agent any
-    
+    environment {
+        DOCKER_REPO = "jrdeveloper06/nginx_hello"
+    }
         stages {
             stage('Docker Pull') {
                 steps  {
-                 sh "docker pull jrdeveloper06/nginx_hello:${params.BUILD_NUMBER}"
+                 sh "docker pull ${env.DOCKER_REPO}:${params.DOCKERTAG_BUILD_NUMBER}"
                 }
             }
              stage('Dive Analyze') {
                 steps  {
-                    sh "dive --ci --lowestEfficiency=0.99 jrdeveloper06/nginx_hello:${params.BUILD_NUMBER} " // --lowestEfficiency=0.99
+                    sh "dive --ci --lowestEfficiency=0.99 ${env.DOCKER_REPO}:${params.DOCKERTAG_BUILD_NUMBER} " // --lowestEfficiency=0.99
                 }
                 
             }
