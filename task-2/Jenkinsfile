@@ -1,49 +1,46 @@
-def buildNumber = currentBuild.number
-def previousBuildNumber = currentBuild.number - 1
-def credentials1 = credentials('my-docker-id');
 def filePath = '/var/lib/jenkins/workspace/nginx-demo/nginx-hello'
-def deployPipeline = 'nginx-demo-deploy'
+def triggerPipeline = 'nginx-demo-dive-analyze'
 pipeline {
     agent any
-   
-
+    enviroment {
+        DOCKER_REPO = "jrdeveloper06/nginx_hello"
+    }
         stages {
             stage('Checkout & Github Repo Clone') {
                 steps  {
-                     checkout changelog: false,
+                checkout changelog: false,
                          scm: scmGit(userRemoteConfigs: [
                          [ credentialsId: 'my-github-id',
                            url: 'https://github.com/erdemdoganayy/nginx-demos' ]
                          ])
                 }
             }
-             stage('Docker Build & Push') {
-                steps  {
-                    script {
-                   withCredentials([
-                    string(credentialsId: 'DockerHub-Username', variable: 'DockerHub-Username'),
-                    string(credentialsId: 'DockerHub-Password', variable: 'DockerHub-Password')
-                    ]) {
-                        
-                        // Docker Build
-                        sh "docker build -t nginx_hello:${buildNumber} ${filePath}"
-                        sh "docker image rm nginx_hello:${previousBuildNumber}"
-
-                        // Docker Push
-                        sh "docker tag nginx_hello jrdeveloper06/nginx_hello:${buildNumber}"
-                        sh "docker push jrdeveloper06/nginx_hello:${buildNumber}"
-                        sh "docker image rm jrdeveloper06/nginx_hello:${previousBuildNumber}"
-         
-                    }
-                }
-                }
-                
+        stage('Docker Build & Push') {
+             steps  {
+                 script {
+                 withCredentials([
+                 string(credentialsId: 'DOCKER_USERNAME', variable: 'DOCKER_USERNAME'),
+                 string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASSWORD')
+                 ]) {
+                     // Docker Build
+                     sh "docker build -t nginx_hello:${BUILD_NUMBER} ${filePath}"
+                     // Docker Push
+                     sh "docker tag nginx_hello ${env.DOCKER_REPO}:${buildNumber}"
+                     sh "docker push ${env.DOCKER_REPO}:${buildNumber}"
+                 }
+                 }
+             }
+        }
+        stage("Clean Up") {
+            steps {
+                sh "docker image rm nginx_hello:${BUILD_NUMBER}"
+                sh "docker image rm ${env.DOCKER_REPO}:${BUILD_NUMBER}"
             }
-             stage("Deploy") {
+        }
+        stage('Deploy') {
                 steps {
-                           build job: "${deployPipeline}", parameters: [string(name: 'BUILD_NUMBER', value: "${currentBuild.number}")]
-                   }
+                build job: "${triggerPipeline}", parameters: [string(name: 'DOCKERTAG_BUILD_NUMBER', value: "${currentBuild.number}")]
                 }
-        
+        }
         }
 }
