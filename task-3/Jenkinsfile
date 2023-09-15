@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+    environment {
+        APP_DIR = '$HOME/jenkinsapp'
+        ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}.zip"
+        SSH_CONNECTION = 'ssh -o StrictHostKeyChecking=no -l vagrant 192.168.56.158'
+    }
+    stages {
+        stage('Docker Clone and Create Folders') {
+            steps {
+                sshagent(credentials: ['vagrant_vm_jenkinsid']) {
+                    sh """
+                   ${SSH_CONNECTION} 'rm -rf fastapi-jenkins && git clone https://github.com/erdemdoganayy/fastapi-jenkins'
+                       """
+                    sh """
+                   ${SSH_CONNECTION} '[ -d ${APP_DIR} ] || mkdir -p ${APP_DIR}'
+                      """
+                }
+            }
+        }
+        stage('Docker-Compose Down') {
+            steps {
+                sshagent(credentials: ['vagrant_vm_jenkinsid']) {
+                    sh """
+                   ${SSH_CONNECTION} 'cd ${env.APP_DIR} ; docker compose down'
+                """
+                }
+            }
+        }
+        stage('Backup && Copy App') {
+            steps {
+                sshagent(credentials: ['vagrant_vm_jenkinsid']) {
+                    sh """
+                        ${SSH_CONNECTION} 'zip -r ${env.ZIP_FILE_NAME} ${env.APP_DIR}'
+                       """
+                    sh """
+                        ${SSH_CONNECTION} 'cd  ${env.APP_DIR} && rm -r * '
+                       """
+                    sh """
+                        ${SSH_CONNECTION} 'cd fastapi-jenkins && mv * ${env.APP_DIR}'
+                       """
+                }
+            }
+        }
+        stage('Docker-Compose Build && Up') {
+            steps {
+                sshagent(credentials: ['vagrant_vm_jenkinsid']) {
+                    sh """
+                        ${SSH_CONNECTION} 'cd ${env.APP_DIR} && docker compose build'
+                       """
+                    sh """
+                        ${SSH_CONNECTION} 'cd  ${env.APP_DIR} && docker compose up -d '
+                       """
+                    sh """
+                        ${SSH_CONNECTION} 'curl --include http://localhost:8000'
+                       """
+                }
+            }
+        }
+    }
+}
