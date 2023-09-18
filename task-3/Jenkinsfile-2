@@ -61,7 +61,7 @@ pipeline {
                                 // OLUŞTURULAN YEDEK ZIP SİLİNİYOR
                                 sshCommand remote: server, command: "rm -rf ${ZIP_FILE_NAME}"
                             }
-                            stage("${server.name} - Output Shows" {
+                            stage("${server.name} - Output Shows") {
                                 // BIR ÖNCEKİ STEPTE AYAĞA KALKAN CONTAINER'A CURL ATARAK 10 KERE ÇIKTISINI YAZDIRIYOR
                                 for (int i = 1; i <= 10; i++) {
                                     sshCommand remote: server, command: 'curl --include http://localhost:8000'
