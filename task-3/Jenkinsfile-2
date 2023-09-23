@@ -40,6 +40,10 @@ choiceParameter = [];
 choiceParameter.add(choice(name: "host choice", 
                     choices: VirtualMachines.keySet() as List, 
                     description: "test"))
+properties([
+    disableConcurrentBuilds(),
+    parameters(choiceParameter),
+])
 
 pipeline {
     agent any
