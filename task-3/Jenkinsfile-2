@@ -78,7 +78,7 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'vagrant_vm_jenkinsid', usernameVariable: 'USERNAME', keyFileVariable: 'RSA_KEY')])
                     {
-                        for (server in VirtualMachines.host) {
+                        for (server in selectedEnvironment.host) {
                             server.user = USERNAME
                             server.identityFile = RSA_KEY
                         
