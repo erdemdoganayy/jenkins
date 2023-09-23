@@ -89,9 +89,16 @@ pipeline {
                             server.identityFile = RSA_KEY
                            
                             stage("test"){
-                            echo "${env.BUILD_ENVIRONMENT}"
-                             //  envToDeploy = VirtualMachines[params]
-                           // echo "${envToDeploy}";
+                            def mappedVirtualMachines = [:]
+
+                                VirtualMachines.each { key, value ->
+                                    // Dizi içindeki githubBranch'i ayrı bir anahtar olarak kullanabilirsiniz.
+                                    // Örneğin, "test" için bir anahtar ve değer olarak githubBranch'i ekleyebilirsiniz.
+                                    mappedVirtualMachines[key] = value
+                                }
+                                
+                                // Şimdi mappedVirtualMachines haritasını kullanabilirsiniz.
+                                println(mappedVirtualMachines)
                             }
                            
 
