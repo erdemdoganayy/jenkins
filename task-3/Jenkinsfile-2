@@ -64,10 +64,13 @@ pipeline {
                         for (server in VirtualMachines.host) {
                             server.user = USERNAME
                             server.identityFile = RSA_KEY
-
+                           
+                            stage("test"){
                             echo "${env.BUILD_ENVIRONMENT}"
-                          //  envToDeploy = VirtualMachines[params]
+                             //  envToDeploy = VirtualMachines[params]
                            // echo "${envToDeploy}";
+                            }
+                           
 
                             stage("${server.name} - Repo Put To VM") {
                                 // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
