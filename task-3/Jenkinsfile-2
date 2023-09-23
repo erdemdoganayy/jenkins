@@ -68,14 +68,18 @@ pipeline {
         stage("parçalama"){
             steps{
                 script{
+                                def mappedVirtualMachines = [:]
 
-                // Get the environment name, e.g., 'test', 'dev', or 'prod'
-                    def environmentName = env.BUILD_ENVIRONMENT
+                                VirtualMachines.each { key, value ->
+                                    // Dizi içindeki githubBranch'i ayrı bir anahtar olarak kullanabilirsiniz.
+                                    // Örneğin, "test" için bir anahtar ve değer olarak githubBranch'i ekleyebilirsiniz.
+                                    mappedVirtualMachines[key] = value
+                                }
 
-                    // Get the VirtualMachine configuration for the current environment
-                    def vmConfig = VirtualMachines[environmentName]
+                                // Şimdi mappedVirtualMachines haritasını kullanabilirsiniz.
+                                println(mappedVirtualMachines)
 
-                    echo "${environmentName}";
+                                echo "bu budur ${mappedVirtualMachines}"
                 }
             }
         }
@@ -89,18 +93,7 @@ pipeline {
                             server.identityFile = RSA_KEY
                            
                             stage("test"){
-                            def mappedVirtualMachines = [:]
-
-                                VirtualMachines.each { key, value ->
-                                    // Dizi içindeki githubBranch'i ayrı bir anahtar olarak kullanabilirsiniz.
-                                    // Örneğin, "test" için bir anahtar ve değer olarak githubBranch'i ekleyebilirsiniz.
-                                    mappedVirtualMachines[key] = value
-                                }
-
-                                // Şimdi mappedVirtualMachines haritasını kullanabilirsiniz.
-                                println(mappedVirtualMachines)
-
-                                echo "bu budur ${mappedVirtualMachines}"
+                            
                             }
                            
 
