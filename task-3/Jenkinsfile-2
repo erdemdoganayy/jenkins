@@ -70,7 +70,7 @@ pipeline {
             steps{
                 script{
                     def selectedEnviraonment = params.ENVIRONMENT
-                    echo "Selected environment: $selectedEnvironment.host.name"
+                    echo "Selected environment: $selectedEnviraonment.host.name"
                 }
             }
         }
