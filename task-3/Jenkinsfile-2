@@ -66,6 +66,9 @@ pipeline {
 
         //STAGe isimeriNİ YAZDIR
         stage("parçalama"){
+            steps{
+                script{
+
                 // Get the environment name, e.g., 'test', 'dev', or 'prod'
                     def environmentName = env.BUILD_ENVIRONMENT
 
@@ -73,6 +76,8 @@ pipeline {
                     def vmConfig = VirtualMachines[environmentName]
 
                     echo "${vmConfig}";
+                }
+            }
         }
         stage('Remote SSH') {
             steps {
