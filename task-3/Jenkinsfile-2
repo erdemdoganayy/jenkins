@@ -68,7 +68,7 @@ pipeline {
         stage("parçalama"){
             steps{
                 script{
-                    envToDeploy = VirtualMachines[params["testerdem"]]
+                    envToDeploy = VirtualMachines[params]
                     echo "burda ${envToDeploy}"
                 }
             }
