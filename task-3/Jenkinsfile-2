@@ -65,8 +65,9 @@ pipeline {
                             server.user = USERNAME
                             server.identityFile = RSA_KEY
 
-                            envToDeploy = VirtualMachines[params]
-                            echo "${envToDeploy}";
+                            echo "${env.BUILD_ENVIRONMENT}"
+                          //  envToDeploy = VirtualMachines[params]
+                           // echo "${envToDeploy}";
 
                             stage("${server.name} - Repo Put To VM") {
                                 // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
