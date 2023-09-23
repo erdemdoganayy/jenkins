@@ -37,7 +37,7 @@ def VirtualMachines = [
        ],
 ]
 choiceParameter = [];
-choiceParameter.add(choice(name: "host choice", 
+choiceParameter.add(choice(name: 'ENVIRONMENT', 
                     choices: VirtualMachines.keySet() as List, 
                     description: "test"))
 properties([
@@ -68,8 +68,8 @@ pipeline {
         stage("parçalama"){
             steps{
                 script{
-                    envToDeploy = VirtualMachines[params]
-                    echo "burda ${envToDeploy}"
+                    def selectedEnvironment = params.ENVIRONMENT
+                    echo "Selected environment: $selectedEnvironment"
                 }
             }
         }
