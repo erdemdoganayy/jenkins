@@ -36,6 +36,11 @@ def VirtualMachines = [
         githubBranch: "prod"
        ],
 ]
+choiceParameter = [];
+choiceParameter.add(choice(name: "host choice", 
+                    choices: VirtualMachines.keySet() as List, 
+                    description: "test"))
+
 pipeline {
     agent any
     environment {
