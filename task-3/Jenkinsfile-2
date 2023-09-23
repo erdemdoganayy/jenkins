@@ -1,5 +1,6 @@
 def VirtualMachines = [
-        host: [
+       test: [
+         host: [
             [
                 name: 'vagrant',
                 host: '192.168.56.158',
@@ -8,6 +9,32 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
+        githubBranch: "test"
+       ],
+       dev: [
+         host: [
+            [
+                name: 'vagrant',
+                host: '192.168.56.158',
+                user: '',
+                identityFile: '',
+                allowAnyHosts: true,
+            ]
+        ],
+        githubBranch: "dev"
+       ],
+       prod: [
+         host: [
+            [
+                name: 'vagrant',
+                host: '192.168.56.158',
+                user: '',
+                identityFile: '',
+                allowAnyHosts: true,
+            ]
+        ],
+        githubBranch: "prod"
+       ],
 ]
 pipeline {
     agent any
@@ -23,6 +50,7 @@ pipeline {
                          scm: scmGit(userRemoteConfigs: [
                          [ credentialsId: 'my-github-id',
                            url: 'https://github.com/erdemdoganayy/fastapi-jenkins' ]
+                          // branches: [[name: VirtualMachines.host. ]]
                          ])
             }
         }
@@ -37,34 +65,37 @@ pipeline {
                             server.user = USERNAME
                             server.identityFile = RSA_KEY
 
+                            envToDeploy = VirtualMachines[params]
+                            echo "${envToDeploy}";
+
                             stage("${server.name} - Repo Put To VM") {
                                 // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
-                                sshPut remote: server, from: '.', into: '/home/vagrant'
-                                sshCommand remote: server, command: "cp -R ${JOB_NAME} ${APP_DIR} && rm -rf ${JOB_NAME}"
+                                sshPut failOnError: false, remote: server, from: '.', into: '/home/vagrant'
+                                sshCommand failOnError: false, remote: server, command: "cp -R ${JOB_NAME} ${APP_DIR} && rm -rf ${JOB_NAME}"
                             }
                             stage("${server.name} - Docker-Compose Down") {
-                                // BELİRTİLMİŞ KLASÖRE GİRİYOR VE DOCKER COMPOSE DOWN YAPIYOR
-                                sshCommand remote: server, command: "cd ${APP_DIR} ; docker compose down"
+                                // BELİRTİLMİŞ KLASÖRE GİRİYOR VE DOCKER COMPOSE DOWN YAPIYOR // CD Dir olarak düzelt
+                                sshCommand failOnError: false, remote: server, command: "cd ${APP_DIR} ; docker compose down"
                             }
                             stage("${server.name} - Backup & Push to S3") {
                                 // ESKİ KODLARI ZİP HALİNE GETİRİP S3'E YEDEKLİYOR
-                                sshCommand remote: server, command: "zip -r ${ZIP_FILE_NAME} ${APP_DIR}"
-                                sshCommand remote: server, command: "aws s3 cp ${ZIP_FILE_NAME} s3://${env.S3_BUCKET}/ "
+                                sshCommand failOnError: false, remote: server, command: "zip -r ${ZIP_FILE_NAME} ${APP_DIR}"
+                                sshCommand failOnError: false, remote: server, command: "aws s3 cp ${ZIP_FILE_NAME} s3://${env.S3_BUCKET}/ "
                             }
                             stage("${server.name} - Docker-Compose Build & Up") {
                                 // BELİRTİLMİŞ KLASÖRE GİRİP DOCKER COMPOSE BUILD VE DOCKER COMPOSE UP YAPIYOR 
-                                sshCommand remote: server, command: "cd ${APP_DIR} && docker compose build"
+                                sshCommand failOnError: false, remote: server, command: "cd ${APP_DIR} && docker compose build"
 
-                                sshCommand remote: server, command: "cd  ${APP_DIR} && docker compose up -d "
+                                sshCommand failOnError: false, remote: server, command: "cd  ${APP_DIR} && docker compose up -d "
                             }
                             stage("${server.name} - Clean Up"){
                                 // OLUŞTURULAN YEDEK ZIP SİLİNİYOR
-                                sshCommand remote: server, command: "rm -rf ${ZIP_FILE_NAME}"
+                                sshCommand failOnError: false, remote: server, command: "rm -rf ${ZIP_FILE_NAME}"
                             }
                             stage("${server.name} - Output Shows") {
                                 // BIR ÖNCEKİ STEPTE AYAĞA KALKAN CONTAINER'A CURL ATARAK 10 KERE ÇIKTISINI YAZDIRIYOR
                                 for (int i = 1; i <= 10; i++) {
-                                    sshCommand remote: server, command: 'curl --include http://localhost:8000'
+                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:8000'
                                 }
 
                             }
