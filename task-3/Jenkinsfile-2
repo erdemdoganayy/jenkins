@@ -68,44 +68,20 @@ pipeline {
         stage("parçalama"){
             steps{
                 script{
-                                def mappedVirtualMachines = [:]
-
-                                VirtualMachines.each { key, value ->
-                                    // Dizi içindeki githubBranch'i ayrı bir anahtar olarak kullanabilirsiniz.
-                                    // Örneğin, "test" için bir anahtar ve değer olarak githubBranch'i ekleyebilirsiniz.
-                                    mappedVirtualMachines[key] = value
-                                }
-
-                                // Şimdi mappedVirtualMachines haritasını kullanabilirsiniz.
-                                println(mappedVirtualMachines)
-
-                                echo "bu budur ${mappedVirtualMachines}"
+                    envToDeploy = VirtualMachines[params["testerdem"]]
+                    echo "burda ${envToDeploy}"
                 }
             }
         }
         stage('Remote SSH') {
             steps {
                 script {
-
-                                def mappedVirtualMachines = [:]
-
-                                VirtualMachines.each { key, value ->
-                                    // Dizi içindeki githubBranch'i ayrı bir anahtar olarak kullanabilirsiniz.
-                                    // Örneğin, "test" için bir anahtar ve değer olarak githubBranch'i ekleyebilirsiniz.
-                                    mappedVirtualMachines[key] = value
-                                }
-
                     withCredentials([sshUserPrivateKey(credentialsId: 'vagrant_vm_jenkinsid', usernameVariable: 'USERNAME', keyFileVariable: 'RSA_KEY')])
                     {
                         for (server in mappedVirtualMachines.host) {
                             server.user = USERNAME
                             server.identityFile = RSA_KEY
-                           
-                            stage("test"){
-                            
-                            }
-                           
-
+                        
                             stage("${server.name} - Repo Put To VM") {
                                 // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
                                 sshPut failOnError: false, remote: server, from: '.', into: '/home/vagrant'
