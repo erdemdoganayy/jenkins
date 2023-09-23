@@ -44,6 +44,7 @@ properties([
     disableConcurrentBuilds(),
     parameters(choiceParameter),
 ])
+def selectedEnvironment = params.ENVIRONMENT
 
 pipeline {
     agent any
