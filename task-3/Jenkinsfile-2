@@ -65,11 +65,11 @@ pipeline {
                             server.user = USERNAME
                             server.identityFile = RSA_KEY
                            
-                            stage("test"){
-                            echo "${env.BUILD_ENVIRONMENT}"
-                             //  envToDeploy = VirtualMachines[params]
-                           // echo "${envToDeploy}";
-                            }
+                        //     stage("test"){
+                        //     echo "${env.BUILD_ENVIRONMENT}"
+                        //      //  envToDeploy = VirtualMachines[params]
+                        //    // echo "${envToDeploy}";
+                        //     }
                            
 
                             stage("${server.name} - Repo Put To VM") {
