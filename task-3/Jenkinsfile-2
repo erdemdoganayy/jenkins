@@ -2,7 +2,7 @@ def VirtualMachines = [
        test: [
          host: [
             [
-                name: 'vagrant',
+                name: 'test',
                 host: '192.168.56.158',
                 user: '',
                 identityFile: '',
@@ -14,7 +14,7 @@ def VirtualMachines = [
        dev: [
          host: [
             [
-                name: 'vagrant',
+                name: 'dev',
                 host: '192.168.56.158',
                 user: '',
                 identityFile: '',
@@ -26,7 +26,7 @@ def VirtualMachines = [
        prod: [
          host: [
             [
-                name: 'vagrant',
+                name: 'prod',
                 host: '192.168.56.158',
                 user: '',
                 identityFile: '',
