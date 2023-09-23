@@ -9,7 +9,7 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
-        githubBranch: "test"
+        githubBranch: "main"
        ],
        dev: [
          host: [
