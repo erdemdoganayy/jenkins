@@ -59,7 +59,7 @@ pipeline {
                          scm: scmGit(userRemoteConfigs: [
                          [ credentialsId: 'my-github-id',
                            url: 'https://github.com/erdemdoganayy/fastapi-jenkins' ]
-                          // branches: [[name: VirtualMachines.host. ]]
+                           branches: [[name: "main" ]]
                          ])
             }
         }
