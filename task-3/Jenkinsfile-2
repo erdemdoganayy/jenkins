@@ -96,9 +96,11 @@ pipeline {
                                     // Örneğin, "test" için bir anahtar ve değer olarak githubBranch'i ekleyebilirsiniz.
                                     mappedVirtualMachines[key] = value
                                 }
-                                
+
                                 // Şimdi mappedVirtualMachines haritasını kullanabilirsiniz.
                                 println(mappedVirtualMachines)
+
+                                echo "bu budur ${mappedVirtualMachines}"
                             }
                            
 
