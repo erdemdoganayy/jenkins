@@ -69,7 +69,7 @@ pipeline {
         stage("parçalama"){
             steps{
                 script{
-                    def selectedEnvironment = params.ENVIRONMENT
+                    def selectedEnviraonment = params.ENVIRONMENT
                     echo "Selected environment: $selectedEnvironment"
                 }
             }
