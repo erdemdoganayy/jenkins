@@ -67,14 +67,14 @@ pipeline {
         }
 
         //STAGe isimeriNİ YAZDIR
-        stage("parçalama"){
-            steps{
-                script{
-                    // def selectedEnviraonment = params.ENVIRONMENT
-                    // echo "Selected environment: $selectedEnviraonment.host.name"
-                }
-            }
-        }
+        // stage("parçalama"){
+        //     steps{
+        //         script{
+        //             // def selectedEnviraonment = params.ENVIRONMENT
+        //             // echo "Selected environment: $selectedEnviraonment.host.name"
+        //         }
+        //     }
+        // }
         stage('Remote SSH') {
             steps {
                 script {
