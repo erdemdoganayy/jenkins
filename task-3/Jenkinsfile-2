@@ -97,6 +97,7 @@ pipeline {
                             }
                             stage("${server.name} - Docker-Compose Down") {
                                 // BELİRTİLMİŞ KLASÖRE GİRİYOR VE DOCKER COMPOSE DOWN YAPIYOR // CD Dir olarak düzelt
+                                sshCommand failOnError: true, remote: server, command: "rm -rf /home/vagrant/${APP_DIR}"
                                 sshCommand failOnError: true, remote: server, command: "mv /home/vagrant/${JOB_NAME} /home/vagrant/${APP_DIR}"
                                 dir("${APP_DIR}"){
                                     sshCommand failOnError: true, remote: server, command: "docker compose down"
