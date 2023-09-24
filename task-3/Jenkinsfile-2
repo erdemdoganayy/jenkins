@@ -36,17 +36,19 @@ def VirtualMachines = [
         githubBranch: "prod"
        ],
 ]
+
+//Choice parametre dizisi oluşturup ".add" ile zincir dizi ekleniyor.Ardından properties ile bu oluşturulan dizi gönderiliyor.
 choiceParameter = [];
 choiceParameterName = "Choose a branch"
 choiceParameter.add(choice(name: choiceParameterName, 
                     choices: VirtualMachines.keySet() as List, 
-                    description: "test"))
+                    description: "Codes related to the branch you choose will work"))
 properties([
     disableConcurrentBuilds(),
     parameters(choiceParameter),
 ])
+// VirtualMachines içerisindeki hostlar yukarıda seçilen branch'e göre seçiliyor.
 def selectedEnvironment = VirtualMachines[params[choiceParameterName]]
-echo "${selectedEnvironment.githubBranch}"
 
 pipeline {
     agent any
@@ -64,19 +66,9 @@ pipeline {
                            url: 'https://github.com/erdemdoganayy/fastapi-jenkins']],
                            branches: [[name: selectedEnvironment.githubBranch ]]
                          )
-                         
             }
         }
 
-        //STAGe isimeriNİ YAZDIR
-        // stage("parçalama"){
-        //     steps{
-        //         script{
-        //             // def selectedEnviraonment = params.ENVIRONMENT
-        //             // echo "Selected environment: $selectedEnviraonment.host.name"
-        //         }
-        //     }
-        // }
         stage('Remote SSH') {
             steps {
                 script {
