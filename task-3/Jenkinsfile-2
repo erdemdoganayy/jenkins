@@ -65,7 +65,7 @@ def selectedEnvironment = VirtualMachines[params[choiceParameterName]]
 pipeline {
     agent any
     environment {
-        APP_DIR = 'vagrant-pipeline'
+        APP_DIR = 'jenkinsapp'
         ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}.zip"
         S3_BUCKET = 'jenkinsfastapi'
     }
