@@ -60,9 +60,10 @@ pipeline {
                 checkout changelog: false,
                          scm: scmGit(userRemoteConfigs: [
                          [ credentialsId: 'my-github-id',
-                           url: 'https://github.com/erdemdoganayy/fastapi-jenkins'],
+                           url: 'https://github.com/erdemdoganayy/fastapi-jenkins']],
                            branches: [[name: selectedEnvironment.githubBranch ]]
-                         ])
+                         )
+                         
             }
         }
 
