@@ -45,7 +45,7 @@ properties([
     parameters(choiceParameter),
 ])
 def selectedEnvironment = VirtualMachines[params['ENVIRONMENT']]
-echo "${selectedEnvironment.host.name}"
+echo "${selectedEnvironment.githubBranch}"
 
 pipeline {
     agent any
