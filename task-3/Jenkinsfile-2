@@ -65,7 +65,7 @@ def selectedEnvironment = VirtualMachines[params[choiceParameterName]]
 pipeline {
     agent any
     environment {
-        APP_DIR = 'jenkinsapp'
+        APP_DIR = 'vagrant-pipeline'
         ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}.zip"
         S3_BUCKET = 'jenkinsfastapi'
     }
@@ -97,8 +97,8 @@ pipeline {
                             }
                             stage("${server.name} - Docker-Compose Down") {
                                 // BELİRTİLMİŞ KLASÖRE GİRİYOR VE DOCKER COMPOSE DOWN YAPIYOR // CD Dir olarak düzelt
-                               // sshCommand failOnError: false, remote: server, command: "cd ${APP_DIR} ; docker compose down"
-                                sshCommand failOnError: false, remote: server, command: "cd vagrant-pipeline ; docker compose down"
+                                sshCommand failOnError: false, remote: server, command: "cd ${APP_DIR} ; docker compose down"
+                              //  sshCommand failOnError: false, remote: server, command: "cd vagrant-pipeline ; docker compose down"
                             }
                             stage("${server.name} - Backup & Push to S3") {
                                 // ESKİ KODLARI ZİP HALİNE GETİRİP S3'E YEDEKLİYOR
