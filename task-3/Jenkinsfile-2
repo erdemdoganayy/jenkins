@@ -33,7 +33,7 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
-        githubBranch: "prods"
+        githubBranch: "prod"
        ],
 ]
 
