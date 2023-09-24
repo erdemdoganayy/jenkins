@@ -9,7 +9,7 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
-        githubBranch: "main"
+        githubBranch: "test"
        ],
        dev: [
          host: [
@@ -61,7 +61,7 @@ pipeline {
                          scm: scmGit(userRemoteConfigs: [
                          [ credentialsId: 'my-github-id',
                            url: 'https://github.com/erdemdoganayy/fastapi-jenkins' ]
-                          // branches: [[name: "main" ]]
+                           branches: [[name: selectedEnvironment.githubBranch ]]
                          ])
             }
         }
