@@ -98,7 +98,9 @@ pipeline {
                             stage("${server.name} - Docker-Compose Down") {
                                 // BELİRTİLMİŞ KLASÖRE GİRİYOR VE DOCKER COMPOSE DOWN YAPIYOR // CD Dir olarak düzelt
                                 sshCommand failOnError: false, remote: server, command: "mv /home/vagrant/${JOB_NAME} /home/vagrant/${APP_DIR}"
-                                sshCommand failOnError: false, remote: server, command: "cd ${APP_DIR} ; docker compose down"
+                                dir("${APP_DIR}"){
+                                    sshCommand failOnError: false, remote: server, command: "docker compose down"
+                                }
                             }
                             stage("${server.name} - Backup & Push to S3") {
                                 // ESKİ KODLARI ZİP HALİNE GETİRİP S3'E YEDEKLİYOR
@@ -107,9 +109,10 @@ pipeline {
                             }
                             stage("${server.name} - Docker-Compose Build & Up") {
                                 // BELİRTİLMİŞ KLASÖRE GİRİP DOCKER COMPOSE BUILD VE DOCKER COMPOSE UP YAPIYOR 
-                                sshCommand failOnError: false, remote: server, command: "cd ${APP_DIR} && docker compose build"
-
-                                sshCommand failOnError: false, remote: server, command: "cd  ${APP_DIR} && docker compose up -d "
+                                dir("${APP_DIR}"){
+                                    sshCommand failOnError: false, remote: server, command: "docker compose build"
+                                    sshCommand failOnError: false, remote: server, command: "docker compose up -d"
+                                }
                             }
                             stage("${server.name} - Clean Up"){
                                 // OLUŞTURULAN YEDEK ZIP SİLİNİYOR
