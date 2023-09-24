@@ -44,7 +44,7 @@ properties([
     disableConcurrentBuilds(),
     parameters(choiceParameter),
 ])
-def selectedEnvironment = params.ENVIRONMENT
+def selectedEnvironment = VirtualMachines[params[ENVIRONMENT]]
 echo "${selectedEnvironment}"
 
 pipeline {
