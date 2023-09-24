@@ -45,6 +45,7 @@ properties([
     parameters(choiceParameter),
 ])
 def selectedEnvironment = params.ENVIRONMENT
+echo "${selectedEnvironmentl}"
 
 pipeline {
     agent any
@@ -69,8 +70,8 @@ pipeline {
         stage("parçalama"){
             steps{
                 script{
-                    def selectedEnviraonment = params.ENVIRONMENT
-                    echo "Selected environment: $selectedEnviraonment.host.name"
+                    // def selectedEnviraonment = params.ENVIRONMENT
+                    // echo "Selected environment: $selectedEnviraonment.host.name"
                 }
             }
         }
