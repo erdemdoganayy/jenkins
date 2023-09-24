@@ -119,6 +119,7 @@ pipeline {
                             stage("${server.name} - Clean Up"){
                                 // OLUŞTURULAN YEDEK ZIP SİLİNİYOR
                                 sshCommand failOnError: false, remote: server, command: "rm -rf ${ZIP_FILE_NAME}"
+                                sshCommand failOnError: false, remote: server, command: "docker rmi \$(docker images -q)"
                             }
                             stage("${server.name} - Output Shows") {
                                 // BIR ÖNCEKİ STEPTE AYAĞA KALKAN CONTAINER'A CURL ATARAK 10 KERE ÇIKTISINI YAZDIRIYOR
