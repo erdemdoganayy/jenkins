@@ -117,9 +117,22 @@ pipeline {
                             }
                             stage("${server.name} - Output Shows") {
                                 // BIR ÖNCEKİ STEPTE AYAĞA KALKAN CONTAINER'A CURL ATARAK 10 KERE ÇIKTISINI YAZDIRIYOR
-                                for (int i = 1; i <= 10; i++) {
-                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:8000'
+                                if (selectedEnvironment.githubBranch == "test") {
+                                 for (int i = 1; i <= 10; i++) {
+                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:10000'
+                                 }
                                 }
+                                if (selectedEnvironment.githubBranch == "dev") {
+                                 for (int i = 1; i <= 10; i++) {
+                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:9000'
+                                 }
+                                }
+                                if (selectedEnvironment.githubBranch == "prod") {
+                                 for (int i = 1; i <= 10; i++) {
+                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:11000'
+                                 }
+                                }
+                                
 
                             }
                         }
