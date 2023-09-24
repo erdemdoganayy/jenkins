@@ -35,6 +35,18 @@ def VirtualMachines = [
         ],
         githubBranch: "prod"
        ],
+       erdem: [
+         host: [
+            [
+                name: 'erdem',
+                host: '192.168.56.158',
+                user: '',
+                identityFile: '',
+                allowAnyHosts: true,
+            ]
+        ],
+        githubBranch: "erdem"
+       ],
 ]
 
 //Choice parametre dizisi oluşturup ".add" ile zincir dizi ekleniyor.Ardından properties ile bu oluşturulan dizi gönderiliyor.
