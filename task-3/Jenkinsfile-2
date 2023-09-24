@@ -37,14 +37,15 @@ def VirtualMachines = [
        ],
 ]
 choiceParameter = [];
-choiceParameter.add(choice(name: 'ENVIRONMENT', 
+choiceParameterName = "Choose a branch"
+choiceParameter.add(choice(name: choiceParameterName, 
                     choices: VirtualMachines.keySet() as List, 
                     description: "test"))
 properties([
     disableConcurrentBuilds(),
     parameters(choiceParameter),
 ])
-def selectedEnvironment = VirtualMachines[params['ENVIRONMENT']]
+def selectedEnvironment = VirtualMachines[params[choiceParameterName]]
 echo "${selectedEnvironment.githubBranch}"
 
 pipeline {
