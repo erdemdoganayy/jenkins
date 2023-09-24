@@ -45,7 +45,7 @@ properties([
     parameters(choiceParameter),
 ])
 def selectedEnvironment = params.ENVIRONMENT
-echo "${selectedEnvironmentl}"
+echo "${selectedEnvironment}"
 
 pipeline {
     agent any
