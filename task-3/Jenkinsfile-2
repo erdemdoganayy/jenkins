@@ -14,7 +14,7 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
-        gitBranchName: "test"
+        gitBranchName: "test",
         githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
 
         workingDirectory : ""
@@ -29,7 +29,7 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
-        gitBranchName: "dev"
+        gitBranchName: "dev",
         githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
        ],
        prod: [
@@ -42,7 +42,7 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
-        gitBranchName: "prod"
+        gitBranchName: "prod",
         githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
        ],
 ]
