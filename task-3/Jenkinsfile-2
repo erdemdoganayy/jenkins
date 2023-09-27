@@ -140,7 +140,7 @@ pipeline {
 
 
                                 for (int i = 1; i <= 10; i++) {
-                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:'\${server.portNumber}\' // Yukarıdaki değişkenden gelsin
+                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:"\${server.portNumber}\"' // Yukarıdaki değişkenden gelsin
                                  }
 
                                
