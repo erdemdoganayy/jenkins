@@ -74,7 +74,7 @@ pipeline {
                 checkout changelog: false,
                          scm: scmGit(userRemoteConfigs: [
                          [ credentialsId: 'my-github-id',
-                           url: ${env.GITHUB_URL} ]],
+                           url: "${env.GITHUB_URL}" ]],
                            branches: [[name: selectedEnvironment.gitBranchName ]]
                          )
             }
