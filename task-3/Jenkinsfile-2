@@ -1,7 +1,7 @@
 // GitbubBranch name change ---------
 // igthub repo url değişkene ata -------
 //  workingDirectory : ""
-// hangi bracnhten zipleniyorsa onun adı yazsın
+// hangi bracnhten zipleniyorsa onun adı yazsın -------
 // parametreleri farklı bir biçimde düzenle
 def VirtualMachines = [
        test: [
@@ -12,10 +12,12 @@ def VirtualMachines = [
                 user: '',
                 identityFile: '',
                 allowAnyHosts: true,
+                portNumber: 10000
             ]
         ],
         gitBranchName: "test",
         githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
+        
        ],
 
        dev: [
@@ -26,12 +28,14 @@ def VirtualMachines = [
                 user: '',
                 identityFile: '',
                 allowAnyHosts: true,
+                portNumber: 9000
             ]
         ],
         gitBranchName: "dev",
         githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
+         
        ],
-       
+
        prod: [
          host: [
             [
@@ -40,10 +44,12 @@ def VirtualMachines = [
                 user: '',
                 identityFile: '',
                 allowAnyHosts: true,
+                portNumber: 11000
             ]
         ],
         gitBranchName: "prod",
         githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
+         
        ],
 ]
 
@@ -134,7 +140,7 @@ pipeline {
 
 
                                 for (int i = 1; i <= 10; i++) {
-                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:10000' // Yukarıdaki değişkenden gelsin
+                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:'\${server.portNumber}\' // Yukarıdaki değişkenden gelsin
                                  }
 
                                
