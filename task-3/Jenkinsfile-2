@@ -16,8 +16,6 @@ def VirtualMachines = [
             ]
         ],
         gitBranchName: "test",
-        githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
-        
        ],
 
        dev: [
@@ -31,9 +29,7 @@ def VirtualMachines = [
                 portNumber: 9000
             ]
         ],
-        gitBranchName: "dev",
-        githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
-         
+        gitBranchName: "dev",      
        ],
 
        prod: [
@@ -48,8 +44,6 @@ def VirtualMachines = [
             ]
         ],
         gitBranchName: "prod",
-        githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
-         
        ],
 ]
 
@@ -72,6 +66,7 @@ pipeline {
         APP_DIR = 'jenkinsapp'
         ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}_${selectedEnvironment.gitBranchName}.zip"
         S3_BUCKET = 'jenkinsfastapi'
+        GITHUB_URL = 'https://github.com/erdemdoganayy/fastapi-jenkins'
     }
     stages {
         stage('Checkout & Clone Repo') {
@@ -79,7 +74,7 @@ pipeline {
                 checkout changelog: false,
                          scm: scmGit(userRemoteConfigs: [
                          [ credentialsId: 'my-github-id',
-                           url: selectedEnvironment.githubUrl ]],
+                           url: ${env.GITHUB_URL} ]],
                            branches: [[name: selectedEnvironment.gitBranchName ]]
                          )
             }
