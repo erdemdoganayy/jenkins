@@ -1,3 +1,8 @@
+// GitbubBranch name change ---------
+// igthub repo url değişkene ata -------
+//  workingDirectory : ""
+// hangi bracnhten zipleniyorsa onun adı yazsın
+// parametreleri farklı bir biçimde düzenle
 def VirtualMachines = [
        test: [
          host: [
@@ -9,7 +14,10 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
-        githubBranch: "test"
+        gitBranchName: "test"
+        githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
+
+        workingDirectory : ""
        ],
        dev: [
          host: [
@@ -21,7 +29,8 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
-        githubBranch: "dev"
+        gitBranchName: "dev"
+        githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
        ],
        prod: [
          host: [
@@ -33,7 +42,8 @@ def VirtualMachines = [
                 allowAnyHosts: true,
             ]
         ],
-        githubBranch: "prod"
+        gitBranchName: "prod"
+        githubUrl: "https://github.com/erdemdoganayy/fastapi-jenkins"
        ],
 ]
 
@@ -54,7 +64,7 @@ pipeline {
     agent any
     environment {
         APP_DIR = 'jenkinsapp'
-        ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}.zip"
+        ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}_${selectedEnvironment.gitBranchName}.zip"
         S3_BUCKET = 'jenkinsfastapi'
     }
     stages {
@@ -63,8 +73,8 @@ pipeline {
                 checkout changelog: false,
                          scm: scmGit(userRemoteConfigs: [
                          [ credentialsId: 'my-github-id',
-                           url: 'https://github.com/erdemdoganayy/fastapi-jenkins']],
-                           branches: [[name: selectedEnvironment.githubBranch ]]
+                           url: selectedEnvironment.githubUrl ]],
+                           branches: [[name: selectedEnvironment.gitBranchName ]]
                          )
             }
         }
@@ -121,24 +131,14 @@ pipeline {
                             stage("${server.name} - Output Shows") {
 
                                 // BIR ÖNCEKİ STEPTE AYAĞA KALKAN CONTAINER'A CURL ATARAK 10 KERE ÇIKTISINI YAZDIRIYOR
-                               
-                                if (selectedEnvironment.githubBranch == "test") {
-                                 for (int i = 1; i <= 10; i++) {
-                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:10000'
-                                 }
-                                }
 
-                                if (selectedEnvironment.githubBranch == "dev") {
-                                 for (int i = 1; i <= 10; i++) {
-                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:9000'
+
+                                for (int i = 1; i <= 10; i++) {
+                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:10000' // Yukarıdaki değişkenden gelsin
                                  }
-                                }
-                                
-                                if (selectedEnvironment.githubBranch == "prod") {
-                                 for (int i = 1; i <= 10; i++) {
-                                    sshCommand failOnError: false, remote: server, command: 'curl --include http://localhost:11000'
-                                 }
-                                }
+
+                               
+                               
                                 
 
                             }
