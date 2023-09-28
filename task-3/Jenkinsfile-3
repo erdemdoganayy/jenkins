@@ -58,18 +58,17 @@ def VirtualMachines = [
 //     parameters(choiceParameter),
 // ])
 
-parameters {
-  choice (
-  choices: VirtualMachines.keySet().toList(), 
-  description: 'Codes related to the branch you choose will work', 
-  name: 'VirtualMachines')
-}
 def selectedEnvironment = VirtualMachines[params['VirtualMachines']]
-// VirtualMachines içerisindeki hostlar yukarıda seçilen branch'e göre seçiliyor.
-echo "${selectedEnvironment}"
 
 pipeline {
     agent any
+            parameters {
+            choice choices: selectedEnvironment, description: 'test', name: 'VirtualMachines'
+            }
+// VirtualMachines içerisindeki hostlar yukarıda seçilen branch'e göre seçiliyor.
+
+
+
     environment {
         APP_DIR = 'jenkinsapp'
         ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}_${selectedEnvironment.gitBranchName}.zip"
