@@ -1,0 +1,154 @@
+// GitbubBranch name change ---------
+// igthub repo url değişkene ata -------
+//  workingDirectory : ""
+// hangi bracnhten zipleniyorsa onun adı yazsın -------
+// parametreleri farklı bir biçimde düzenle
+def VirtualMachines = [
+       test: [
+         host: [
+            [
+                name: 'test',
+                host: '192.168.56.158',
+                user: '',
+                identityFile: '',
+                allowAnyHosts: true,
+                portNumber: 10000
+            ]
+        ],
+        gitBranchName: "test",
+       ],
+
+       dev: [
+         host: [
+            [
+                name: 'dev',
+                host: '192.168.56.158',
+                user: '',
+                identityFile: '',
+                allowAnyHosts: true,
+                portNumber: 9000
+            ]
+        ],
+        gitBranchName: "dev",      
+       ],
+
+       prod: [
+         host: [
+            [
+                name: 'prod',
+                host: '192.168.56.158',
+                user: '',
+                identityFile: '',
+                allowAnyHosts: true,
+                portNumber: 11000
+            ]
+        ],
+        gitBranchName: "prod",
+       ],
+]
+
+//Choice parametre dizisi oluşturup ".add" ile zincir dizi ekleniyor.Ardından properties ile bu oluşturulan dizi gönderiliyor.
+// choiceParameter = [];
+// choiceParameterName = "Choose a branch"
+// choiceParameter.add(choice(name: choiceParameterName, 
+//                     choices: VirtualMachines.keySet() as List, 
+//                     description: "Codes related to the branch you choose will work"))
+// properties([
+//     disableConcurrentBuilds(),
+//     parameters(choiceParameter),
+// ])
+def selectedEnvironment = VirtualMachines.keySet().toList();
+parameters {
+  choice (
+  choices: selectedEnvironment, 
+  description: 'Codes related to the branch you choose will work', 
+  name: 'choiceParameterName')
+}
+// VirtualMachines içerisindeki hostlar yukarıda seçilen branch'e göre seçiliyor.
+
+pipeline {
+    agent any
+    environment {
+        APP_DIR = 'jenkinsapp'
+        ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}_${selectedEnvironment.gitBranchName}.zip"
+        S3_BUCKET = 'jenkinsfastapi'
+        GITHUB_URL = 'https://github.com/erdemdoganayy/fastapi-jenkins'
+    }
+    stages {
+        stage('Checkout & Clone Repo') {
+            steps {
+                checkout changelog: false,
+                         scm: scmGit(userRemoteConfigs: [
+                         [ credentialsId: 'my-github-id',
+                           url: "${env.GITHUB_URL}" ]],
+                           branches: [[name: selectedEnvironment.gitBranchName ]]
+                         )
+            }
+        }
+
+        stage('Remote SSH') {
+            steps {
+                script {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'vagrant_vm_jenkinsid', usernameVariable: 'USERNAME', keyFileVariable: 'RSA_KEY')])
+                    {
+                        for (server in selectedEnvironment.host) {
+                            server.user = USERNAME
+                            server.identityFile = RSA_KEY
+                        
+                            stage("${server.name} - Repo Put To VM") {
+
+                                // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
+                               
+                                sshCommand failOnError: true, remote: server, command: "rm -rf /home/vagrant/${APP_DIR}"
+                                sshPut failOnError: false, remote: server, from: '.', into: '/home/vagrant'
+
+                            }
+                            stage("${server.name} - Docker-Compose Down") {
+
+                                // BELİRTİLMİŞ KLASÖRE GİRİYOR VE DOCKER COMPOSE DOWN YAPIYOR // CD Dir olarak düzelt
+                                
+                                sshCommand failOnError: true, remote: server, command: "mv /home/vagrant/${JOB_NAME} /home/vagrant/${APP_DIR}"
+                                sshCommand failOnError: true, remote: server, command: "cd ${APP_DIR} && docker compose down"
+                                
+                            }
+                            stage("${server.name} - Backup & Push to S3") {
+
+                                // ESKİ KODLARI ZİP HALİNE GETİRİP S3'E YEDEKLİYOR
+
+                                sshCommand failOnError: false, remote: server, command: "zip -r ${ZIP_FILE_NAME} ${APP_DIR}"
+                                sshCommand failOnError: false, remote: server, command: "aws s3 cp ${ZIP_FILE_NAME} s3://${env.S3_BUCKET}/ "
+                            
+                            }
+                            stage("${server.name} - Docker-Compose Build & Up") {
+
+                                // BELİRTİLMİŞ KLASÖRE GİRİP DOCKER COMPOSE BUILD VE DOCKER COMPOSE UP YAPIYOR 
+                            
+                                sshCommand failOnError: false, remote: server, command: "cd ${APP_DIR} && docker compose build"
+                                sshCommand failOnError: false, remote: server, command: "cd ${APP_DIR} && docker compose up -d"
+                                
+                            }
+                            stage("${server.name} - Clean Up"){
+
+                                // OLUŞTURULAN YEDEK ZIP SİLİNİYOR
+
+                                sshCommand failOnError: false, remote: server, command: "rm -rf ${ZIP_FILE_NAME}"
+                                sshCommand failOnError: false, remote: server, command: "docker rmi \$(docker images -q)"
+                           
+                            }
+                            stage("${server.name} - Output Shows") {
+
+                                // BIR ÖNCEKİ STEPTE AYAĞA KALKAN CONTAINER'A CURL ATARAK 10 KERE ÇIKTISINI YAZDIRIYOR
+
+
+                                for (int i = 1; i <= 10; i++) {
+                                    sshCommand failOnError: false, remote: server, command: "curl --include http://localhost:${server.portNumber}" // Yukarıdaki değişkenden gelsin
+                                 }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
