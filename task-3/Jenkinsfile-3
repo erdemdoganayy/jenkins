@@ -47,27 +47,20 @@ def VirtualMachines = [
        ],
 ]
 
-//Choice parametre dizisi oluşturup ".add" ile zincir dizi ekleniyor.Ardından properties ile bu oluşturulan dizi gönderiliyor.
-// choiceParameter = [];
-// choiceParameterName = "Choose a branch"
-// choiceParameter.add(choice(name: choiceParameterName, 
-//                     choices: VirtualMachines.keySet() as List, 
-//                     description: "Codes related to the branch you choose will work"))
-// properties([
-//     disableConcurrentBuilds(),
-//     parameters(choiceParameter),
-// ])
+properties((
+    parameters {
+            choice(name: 'VirtualMachines', 
+            choices: selectedEnvironment, 
+            description: 'test' )
+            }
+))
 
-def selectedEnvironment = VirtualMachines[params['VirtualMachines']]
+
+def selectedEnvironment = VirtualMachines.keySet().toList();
 
 pipeline {
     agent any
-            parameters {
-            choice choices: selectedEnvironment, description: 'test', name: 'VirtualMachines'
-            }
-// VirtualMachines içerisindeki hostlar yukarıda seçilen branch'e göre seçiliyor.
-
-
+            
 
     environment {
         APP_DIR = 'jenkinsapp'
