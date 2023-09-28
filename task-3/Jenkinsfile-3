@@ -48,14 +48,13 @@ def VirtualMachines = [
 ]
 
 def selectedEnvironment = VirtualMachines.keySet().toList();
-properties((
-    parameters {
-            choice(name: 'VirtualMachines', 
+def test = choice(name: 'VirtualMachines', 
             choices: selectedEnvironment, 
             description: 'test' )
-            }
-))
 
+properties([
+   parameters (test)
+])
 
 
 pipeline {
