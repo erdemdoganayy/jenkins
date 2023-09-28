@@ -57,15 +57,16 @@ def VirtualMachines = [
 //     disableConcurrentBuilds(),
 //     parameters(choiceParameter),
 // ])
-def selectedEnvironment = VirtualMachines.keySet().toList();
-echo "${selectedEnvironment}";
+
 parameters {
   choice (
-  choices: selectedEnvironment, 
+  choices: VirtualMachines.keySet().toList(), 
   description: 'Codes related to the branch you choose will work', 
-  name: 'choiceParameterName')
+  name: 'VirtualMachines')
 }
+def selectedEnvironment = VirtualMachines[params['VirtualMachines']]
 // VirtualMachines içerisindeki hostlar yukarıda seçilen branch'e göre seçiliyor.
+echo "${selectedEnvironment}"
 
 pipeline {
     agent any
