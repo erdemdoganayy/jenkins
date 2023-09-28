@@ -58,6 +58,7 @@ def VirtualMachines = [
 //     parameters(choiceParameter),
 // ])
 def selectedEnvironment = VirtualMachines.keySet().toList();
+echo "${selectedEnvironment}";
 parameters {
   choice (
   choices: selectedEnvironment, 
