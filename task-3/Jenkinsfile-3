@@ -47,19 +47,16 @@ def VirtualMachines = [
        ],
 ]
 
-def selectedEnvironment = VirtualMachines.keySet().toList();
-def test = choice(name: 'VirtualMachines', 
-            choices: selectedEnvironment, 
-            description: 'test' )
+//def selectedEnvironment = VirtualMachines.keySet().toList();
 
-properties([
-   parameters (test)
-])
 
 
 pipeline {
     agent any
-            
+    
+    parameters {
+    choice choices: ['dev', 'test', 'prod'], description: 'this is a description', name: 'parameters'
+    }
 
     environment {
         APP_DIR = 'jenkinsapp'
