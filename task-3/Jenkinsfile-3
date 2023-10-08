@@ -47,20 +47,20 @@ def VirtualMachines = [
        ],
 ]
 
-def selectedEnvironment = VirtualMachines.keySet().toList();
-
-
+def VirtualMachinesEnvironment = VirtualMachines.keySet().toList();
+def selectedEnvironment = VirtualMachines[parameters]
 
 pipeline {
     agent any
     
     parameters {
-    choice choices: selectedEnvironment, description: 'this is a description', name: 'parameters'
+        choice choices: VirtualMachinesEnvironment, description: 'this is a description', name: 'parameters'
+        
     }
 
     environment {
         APP_DIR = 'jenkinsapp'
-        ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}_${selectedEnvironment.gitBranchName}.zip"
+       // ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}_${selectedEnvironment.gitBranchName}.zip"
         S3_BUCKET = 'jenkinsfastapi'
         GITHUB_URL = 'https://github.com/erdemdoganayy/fastapi-jenkins'
     }
