@@ -47,7 +47,7 @@ def VirtualMachines = [
        ],
 ]
 
-//def selectedEnvironment = VirtualMachines.keySet().toList();
+def selectedEnvironment = VirtualMachines.keySet().toList();
 
 
 
@@ -55,7 +55,7 @@ pipeline {
     agent any
     
     parameters {
-    choice choices: ['dev', 'test', 'prod'], description: 'this is a description', name: 'parameters'
+    choice choices: selectedEnvironment, description: 'this is a description', name: 'parameters'
     }
 
     environment {
