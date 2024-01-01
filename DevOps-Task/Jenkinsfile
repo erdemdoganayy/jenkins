@@ -3,7 +3,7 @@ def VirtualMachines = [
          host: [
             [
                 name: 'test',
-                host: '3.75.224.143',
+                host: '192.168.56.158',
                 user: '',
                 password: '',
                 allowAnyHosts: true,
@@ -36,7 +36,7 @@ pipeline {
         stage('Remote SSH') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'son-awk', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')] {
+                    withCredentials([usernamePassword(credentialsId: 'son-awk', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')] 
 
                     {
                         for (server in selectedEnvironment.host) {
