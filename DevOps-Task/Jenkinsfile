@@ -56,7 +56,7 @@ pipeline {
                  string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASSWORD')
                  ]) {
                      // Docker Build
-                     sh "docker build -t python-crud:${BUILD_NUMBER}"
+                     sh "docker build -t python-crud:${BUILD_NUMBER} ."
                      // Docker Push
                      sh "docker tag python-crud ${env.DOCKER_REPO}:${BUILD_NUMBER}"
                      sh "docker push ${env.DOCKER_REPO}:${BUILD_NUMBER}"
