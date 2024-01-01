@@ -1,8 +1,3 @@
-// GitbubBranch name change ---------
-// igthub repo url değişkene ata -------
-//  workingDirectory : ""
-// hangi bracnhten zipleniyorsa onun adı yazsın -------
-// parametreleri farklı bir biçimde düzenle
 def VirtualMachines = [
        test: [
          host: [
@@ -11,11 +6,12 @@ def VirtualMachines = [
                 host: '3.75.224.143',
                 user: '',
                 password: '',
-                allowAnyHosts: true
+                allowAnyHosts: true,
+                portNumber: 10000
             ]
         ],
         gitBranchName: "test",
-       ]
+       ],
 ]
 
 def VirtualMachinesEnvironment = VirtualMachines.keySet().toList();
@@ -36,32 +32,25 @@ pipeline {
         GITHUB_URL = 'https://github.com/erdemdoganayy/fastapi-jenkins'
     }
     stages {
-    
-
+        
         stage('Remote SSH') {
             steps {
                 script {
-                 //withCredentials([sshUserPrivateKey(credentialsId: 'aws-flask-machine', keyFileVariable: 'KEY', usernameVariable: 'USERNAME')])
-                 withCredentials([usernamePassword(credentialsId: 'son-awk', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]
+                    withCredentials([usernamePassword(credentialsId: 'son-awk', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')] {
+
                     {
                         for (server in selectedEnvironment.host) {
                             server.user = USERNAME
                             server.password = PASSWORD
-
-                            echo USERNAME
-                            echo KEY
                         
                             stage("${server.name} - Repo Put To VM") {
 
                                 // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
                                
-                                sshCommand failOnError: false, remote: server, command: "ls"
-                          
+                                sshCommand failOnError: false, remote: server, command: "ls -al"
 
                             }
-        
-  
-                     
+                          
                         }
                     }
                 }
