@@ -1,11 +1,16 @@
+// GitbubBranch name change ---------
+// igthub repo url değişkene ata -------
+//  workingDirectory : ""
+// hangi bracnhten zipleniyorsa onun adı yazsın -------
+// parametreleri farklı bir biçimde düzenle
 def VirtualMachines = [
        test: [
          host: [
             [
                 name: 'test',
-                host: '192.168.56.158',
+                host: '3.75.224.143',
                 user: '',
-                password: '',
+                identityFile: '',
                 allowAnyHosts: true,
                 portNumber: 10000
             ]
@@ -30,20 +35,52 @@ pipeline {
         ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}_${selectedEnvironment.gitBranchName}.zip"
         S3_BUCKET = 'jenkinsfastapi'
         GITHUB_URL = 'https://github.com/erdemdoganayy/fastapi-jenkins'
+        DOCKER_REPO = "jrdeveloper06/python-crud"
     }
     stages {
+
+         stage('Checkout & Github Repo Clone') {
+                steps  {
+                checkout changelog: false,
+                         scm: scmGit(userRemoteConfigs: [
+                         [ credentialsId: 'my-github-id',
+                           url: 'https://github.com/erdemdoganayy/flask-mongodb.git' ]
+                         ])
+                }
+            }
+        stage('Docker Build & Push') {
+             steps  {
+                 script {
+                 withCredentials([
+                 string(credentialsId: 'DOCKER_USERNAME', variable: 'DOCKER_USERNAME'),
+                 string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASSWORD')
+                 ]) {
+                     // Docker Build
+                     sh "docker build -t python-crud:${BUILD_NUMBER}"
+                     // Docker Push
+                     sh "docker tag python-crud ${env.DOCKER_REPO}:${BUILD_NUMBER}"
+                     sh "docker push ${env.DOCKER_REPO}:${BUILD_NUMBER}"
+                 }
+                 }
+             }
+        }
+        stage("Clean Up") {
+            steps {
+                sh "docker image rm python-crud:${BUILD_NUMBER}"
+                sh "docker image rm ${env.DOCKER_REPO}:${BUILD_NUMBER}"
+            }
+        }
         
         stage('Remote SSH') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'son-awk', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')] 
-
+                    withCredentials([sshUserPrivateKey(credentialsId: 'aws-flask-machine', keyFileVariable: 'KEY', usernameVariable: 'USERNAME')])
                     {
                         for (server in selectedEnvironment.host) {
                             server.user = USERNAME
-                            server.password = PASSWORD
+                            server.identityFile = KEY
                         
-                            stage("${server.name} - Repo Put To VM") {
+                            stage("${server.name} - Git Repo Clone") {
 
                                 // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
                                
