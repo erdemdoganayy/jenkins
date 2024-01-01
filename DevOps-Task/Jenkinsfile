@@ -11,8 +11,7 @@ def VirtualMachines = [
                 host: '3.75.224.143',
                 user: '',
                 identityFile: '',
-                allowAnyHosts: true,
-                portNumber: 10000
+                allowAnyHosts: true
             ]
         ],
         gitBranchName: "test",
@@ -55,7 +54,7 @@ pipeline {
 
                                 // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
                                
-                                sshCommand failOnError: true, remote: server, command: "echo 'sa'"
+                                sshCommand failOnError: false, remote: server, command: "echo 'sa'"
                           
 
                             }
