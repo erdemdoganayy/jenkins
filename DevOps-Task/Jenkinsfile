@@ -58,7 +58,6 @@ pipeline {
                      // Docker Build
                      sh "docker build -t ${env.DOCKER_REPO}:${BUILD_NUMBER} ."
                      // Docker Push
-                    // sh "docker tag python-crud ${env.DOCKER_REPO}:${BUILD_NUMBER}"
                      sh "docker push ${env.DOCKER_REPO}:${BUILD_NUMBER}" 
                  }
                  }
@@ -66,7 +65,6 @@ pipeline {
         }
         stage("Clean Up") {
             steps {
-                sh "docker image rm python-crud:${BUILD_NUMBER}"
                 sh "docker image rm ${env.DOCKER_REPO}:${BUILD_NUMBER}"
             }
         }
