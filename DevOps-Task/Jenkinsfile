@@ -10,7 +10,7 @@ def VirtualMachines = [
                 name: 'test',
                 host: '3.75.224.143',
                 user: '',
-                identityFile: '',
+                password: '',
                 allowAnyHosts: true
             ]
         ],
@@ -41,11 +41,12 @@ pipeline {
         stage('Remote SSH') {
             steps {
                 script {
-                 withCredentials([sshUserPrivateKey(credentialsId: 'aws-flask-machine', keyFileVariable: 'KEY', usernameVariable: 'USERNAME')])
+                 //withCredentials([sshUserPrivateKey(credentialsId: 'aws-flask-machine', keyFileVariable: 'KEY', usernameVariable: 'USERNAME')])
+                 withCredentials([usernamePassword(credentialsId: 'son-awk', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]
                     {
                         for (server in selectedEnvironment.host) {
                             server.user = USERNAME
-                            server.identityFile = KEY
+                            server.password = PASSWORD
 
                             echo USERNAME
                             echo KEY
@@ -54,7 +55,7 @@ pipeline {
 
                                 // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
                                
-                                sshCommand failOnError: false, remote: server, command: "echo 'sa'"
+                                sshCommand failOnError: false, remote: server, command: "ls"
                           
 
                             }
