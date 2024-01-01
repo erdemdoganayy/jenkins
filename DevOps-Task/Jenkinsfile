@@ -1,0 +1,77 @@
+// GitbubBranch name change ---------
+// igthub repo url değişkene ata -------
+//  workingDirectory : ""
+// hangi bracnhten zipleniyorsa onun adı yazsın -------
+// parametreleri farklı bir biçimde düzenle
+def VirtualMachines = [
+       test: [
+         host: [
+            [
+                name: 'test',
+                host: '3.75.224.143',
+                user: '',
+                password: '',
+                allowAnyHosts: true,
+                portNumber: 10000
+            ]
+        ],
+        gitBranchName: "test",
+       ]
+]
+
+def VirtualMachinesEnvironment = VirtualMachines.keySet().toList();
+def selectedEnvironment = VirtualMachines[parameters]
+
+pipeline {
+    agent any
+    
+    parameters {
+        choice choices: VirtualMachinesEnvironment, description: 'this is a description', name: 'parameters'
+        
+    }
+
+    environment {
+        APP_DIR = 'jenkinsapp'
+        ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}_${selectedEnvironment.gitBranchName}.zip"
+        S3_BUCKET = 'jenkinsfastapi'
+        GITHUB_URL = 'https://github.com/erdemdoganayy/fastapi-jenkins'
+    }
+    stages {
+        stage('Checkout & Clone Repo') {
+            steps {
+                checkout changelog: false,
+                         scm: scmGit(userRemoteConfigs: [
+                         [ credentialsId: 'my-github-id',
+                           url: "${env.GITHUB_URL}" ]],
+                           branches: [[name: selectedEnvironment.gitBranchName ]]
+                         )
+            }
+        }
+
+        stage('Remote SSH') {
+            steps {
+                script {
+                 withCredentials([usernamePassword(credentialsId: 'aws-flask-machine', passwordVariable: 'AWSPASSWORD', usernameVariable: 'AWSROOT')])
+                    {
+                        for (server in selectedEnvironment.host) {
+                            server.user = AWSROOT
+                            server.password = AWSPASSWORD
+                        
+                            stage("${server.name} - Repo Put To VM") {
+
+                                // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
+                               
+                                sshCommand failOnError: true, remote: server, command: "echo 'sa'"
+                          
+
+                            }
+        
+  
+                     
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
