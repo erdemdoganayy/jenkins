@@ -59,7 +59,7 @@ pipeline {
                      sh "docker build -t ${env.DOCKER_REPO}:${BUILD_NUMBER} ."
                      // Docker Push
                     // sh "docker tag python-crud ${env.DOCKER_REPO}:${BUILD_NUMBER}"
-                     sh "docker push ${env.DOCKER_REPO}:${BUILD_NUMBER}"
+                     sh "docker push ${env.DOCKER_REPO}:${BUILD_NUMBER}" 
                  }
                  }
              }
