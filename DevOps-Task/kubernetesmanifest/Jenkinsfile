@@ -18,7 +18,7 @@ node {
                         sh "git config user.name edo"
                         //sh "git switch master"
                         sh "cat DevOps-Task/kubernetesmanifest/deployment.yaml"
-                        sh "sed -i 's+jrdeveloper06/python-crud.*+jrdeveloper06/python-crud:${DOCKERTAG}+g' cat DevOps-Task/kubernetesmanifest/deployment.yaml"
+                        sh "sed -i 's+jrdeveloper06/python-crud.*+jrdeveloper06/python-crud:${DOCKERTAG}+g' DevOps-Task/kubernetesmanifest/deployment.yaml"
                         sh "cat DevOps-Task/kubernetesmanifest/deployment.yaml"
                         sh "git add ."
                         sh "git commit -m 'Done by Jenkins Job changemanifest: ${env.BUILD_NUMBER}'"
