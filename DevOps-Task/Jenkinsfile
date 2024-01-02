@@ -69,30 +69,9 @@ pipeline {
             }
         }
         
-        stage('Remote SSH') {
-            steps {
-                script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'aws-flask-machine', keyFileVariable: 'KEY', usernameVariable: 'USERNAME')])
-                    {
-                        for (server in selectedEnvironment.host) {
-                            server.user = USERNAME
-                            server.identityFile = KEY
-                        
-                            stage("${server.name} - Git Repo Clone") {
-
-                                // SSH PUT İLE JENKİNS WORKSPACE DİZİNİNDEKİ İNDİRİLEN REPOYU KARŞI SUNUCUYA AKTARIYOR || AKTARILMIŞ DOSYANIN ADINI DEĞİŞTİRİP ESKİSİNİ SİLİYOR
-                               
-                                sshCommand failOnError: false, remote: server, command: "cd /etc/rancher/rke2 && kubectl apply -f deployment.yaml"
-                                sshCommand failOnError: false, remote: server, command: "DOCKER_IMAGE_TAG=$(docker images --format="{{.Tag}}" jrdeveloper06/python-crud)"
-                                sshCommand failOnError: false, remote: server, command: "cd /etc/rancher/rke2 && kubectl set image deployment/flask-mongodb-deployment flask-app=jrdeveloper06/python-crud:$DOCKER_IMAGE_TAG"
-                                sshCommand failOnError: false, remote: server, command: "docker rmi $(docker images -q)"
-
-                            }
-                          
-                        }
-                    }
-                }
-            }
+        stage('Trigger ManifestUpdate') {
+                echo "triggering updatemanifestjob"
+                build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
         }
     }
 }

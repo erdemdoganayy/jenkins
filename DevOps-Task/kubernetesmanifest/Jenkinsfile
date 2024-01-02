@@ -1,0 +1,30 @@
+node {
+    def app
+
+    stage('Clone repository') {
+      
+
+        checkout scm
+    }
+
+    stage('Update GIT') {
+            script {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                  
+                    withCredentials([usernamePassword(credentialsId: 'my-github-id', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')])
+                    {
+                        //def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
+                        sh "git config user.email erdemdoganayiletisim@gmail.com"
+                        sh "git config user.name edo"
+                        //sh "git switch master"
+                        sh "cat deployment.yaml"
+                        sh "sed -i 's+jrdeveloper06/python-crud.*+jrdeveloper06/python-crud:${DOCKERTAG}+g' deployment.yaml"
+                        sh "cat deployment.yaml"
+                        sh "git add ."
+                        sh "git commit -m 'Done by Jenkins Job changemanifest: ${env.BUILD_NUMBER}'"
+                        sh "git push https://${USERNAME}:${GIT_PASSWORD}@github.com/${USERNAME}/kubernetesmanifest.git HEAD:main"
+      }
+    }
+  }
+}
+}
