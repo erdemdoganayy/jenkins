@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: jrdeveloper06/python-crud:latest
+          image: jrdeveloper06/python-crud:65
           ports:
             - containerPort: 5000
         - name: mongo
