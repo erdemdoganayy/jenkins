@@ -31,10 +31,6 @@ pipeline {
     }
 
     environment {
-        APP_DIR = 'jenkinsapp'
-        ZIP_FILE_NAME = "jenkinsapp_${BUILD_NUMBER}_${selectedEnvironment.gitBranchName}.zip"
-        S3_BUCKET = 'jenkinsfastapi'
-        GITHUB_URL = 'https://github.com/erdemdoganayy/fastapi-jenkins'
         DOCKER_REPO = "jrdeveloper06/python-crud"
     }
     stages {
